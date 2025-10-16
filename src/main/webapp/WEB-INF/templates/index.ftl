@@ -21,7 +21,7 @@
 
         <section id="about" class="py-5 bg-white">
             <div class="container">
-                <h2 class="fw-bold text-center text-green mb-5">Почему выбирают нас</h2>
+                <h2 class="fw-bold text-center my-green mb-5">Почему выбирают нас</h2>
                 <div class="row text-center g-4">
                     <div class="col-md-4">
                         <h5 class="fw-bold">Удобный поиск</h5>

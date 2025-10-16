@@ -1,7 +1,37 @@
+.my-green {
+    color: #29a143;
+}
+
+.btn-nav-outline {
+    color: #29a143;
+    border-color: #29a143;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-nav-outline:hover {
+    color: #ffffff;
+    background-color: #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-nav-primary {
+    color: #ffffff;
+    background-color: #29a143;
+    border-color: #29a143;
+}
+
+.btn-nav-primary:hover {
+    color: #29a143;
+    background-color: #ffffff;
+    border-color: #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
 .hero {
     position: relative;
     background:
-            linear-gradient(90deg, rgba(81, 236, 124, 0.30) 0%, rgba(40, 167, 69, 0.05) 60%),
+            linear-gradient(90deg, rgba(81, 236, 124, 0.25) 0%, rgba(40, 167, 69, 0.05) 60%),
             url('../image/background_main_page.jpg') no-repeat center center/cover;
     color: white;
     min-height: 70vh;
