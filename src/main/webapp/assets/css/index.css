@@ -1,0 +1,65 @@
+.hero {
+    position: relative;
+    background:
+            linear-gradient(90deg, rgba(81, 236, 124, 0.30) 0%, rgba(40, 167, 69, 0.05) 60%),
+            url('../image/background_main_page.jpg') no-repeat center center/cover;
+    color: white;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-weight: 800;
+    font-size: 3.6rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.btn-hero {
+    background-color: #ffffff;
+    border: none;
+    padding: 0.9rem 2.6rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #29a143;
+    border-radius: 60px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-hero:hover {
+    background-color: rgba(41, 161, 67, 0.6);
+    transform: translateY(-2px);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.partners-section {
+    background-color: #f8f9fa;
+}
+
+.btn-operator {
+    background-color: #ffffff;
+    border: none;
+    padding: 0.8rem 2.5rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #29a143;
+    border-radius: 60px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-operator:hover {
+    background-color: rgba(41, 161, 67, 0.9);
+    transform: translateY(-2px);
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
