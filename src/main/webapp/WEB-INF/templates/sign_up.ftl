@@ -19,23 +19,32 @@
             <button type="button" class="btn flex-fill">Тур оператор</button>
         </div>
 
-        <form action="/sign_up" method="POST">
+        <form action="${contextPath}/sign_up" method="POST">
             <input type="hidden" id="role" name="role" value="USER">
 
             <div class="mb-3">
-                <input type="email" class="form-control" name="email" placeholder="Электронная почта" required>
+                <#if errors?? && errors.email??>
+                    <span id="email-error" class="error-message">Ошибка: ${errors.email}</span>
+                </#if>
+                <input type="email" id="email" class="form-control" name="email" placeholder="Электронная почта" required value="${(email)!''}">
             </div>
 
             <div id="user-name-field" class="mb-3">
-                <input type="text" class="form-control" name="username" placeholder="Имя пользователя" required>
+                <#if errors?? && errors.username??>
+                    <span id="username-error" class="error-message">Ошибка: ${errors.username}</span>
+                </#if>
+                <input type="text" id="username" class="form-control" name="username" placeholder="Имя пользователя" required value="${(username)!''}">
             </div>
 
             <div id="operator-name-field" class="mb-3 d-none">
-                <input type="text" class="form-control" name="company_name" placeholder="Название компании" required>
+                <input type="text" id="company_name" class="form-control" name="company_name" placeholder="Название компании" required disabled>
             </div>
 
             <div class="mb-3">
-                <input type="password" class="form-control" name="password" placeholder="Пароль" required>
+                <#if errors?? && errors.password??>
+                    <span id="password-error" class="error-message">Ошибка: ${errors.password}</span>
+                </#if>
+                <input type="password" id="password" class="form-control" name="password" placeholder="Пароль" required minlength="8">
             </div>
             <button type="submit" class="btn btn-submit w-100">Зарегистрироваться</button>
         </form>
