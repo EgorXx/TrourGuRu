@@ -13,6 +13,8 @@ public class Operator {
         this.status = status;
     }
 
+    public Operator() {}
+
     public Integer getUserId() {
         return userId;
     }

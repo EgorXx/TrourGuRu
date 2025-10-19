@@ -2,6 +2,7 @@ package ru.kpfu.itis.sorokin.service.impl;
 
 import ru.kpfu.itis.sorokin.dao.UserDao;
 import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
+import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.User;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.UserService;
@@ -19,6 +20,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signUp(UserSignUpDto userSignUpDto) throws ValidationException {
+
+        validateSignUpUser(userSignUpDto);
+
+        User user = new User();
+
+        String paswordHash = PasswordUtil.encrypt(userSignUpDto.password());
+
+        user.setEmail(userSignUpDto.email());
+        user.setName(userSignUpDto.username());
+        user.setPasswordHash(paswordHash);
+        user.setRole(Role.USER);
+
+        userDao.save(user);
+    }
+
+    private void validateSignUpUser(UserSignUpDto userSignUpDto) throws ValidationException {
         Map<String, String> errors = new HashMap<>();
 
         if (!userSignUpDto.email().matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$")) {
@@ -34,16 +51,5 @@ public class UserServiceImpl implements UserService {
         if (!errors.isEmpty()) {
             throw new ValidationException(errors);
         }
-
-        User user = new User();
-
-        String paswordHash = PasswordUtil.encrypt(userSignUpDto.password());
-
-        user.setEmail(userSignUpDto.email());
-        user.setName(userSignUpDto.username());
-        user.setPasswordHash(paswordHash);
-        user.setRole(userSignUpDto.role());
-
-        userDao.save(user);
     }
 }
