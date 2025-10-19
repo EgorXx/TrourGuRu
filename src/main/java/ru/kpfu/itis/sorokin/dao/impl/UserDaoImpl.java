@@ -26,7 +26,7 @@ public class UserDaoImpl implements UserDao {
             int insertRows = preparedStatement.executeUpdate();
 
             if (insertRows == 0) {
-                throw new DataAccessException("Failed save user, no rows");
+                throw new DataAccessException("Failed save user, no insert row");
             }
 
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
