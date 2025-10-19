@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropertiesUtil {
+public final class PropertiesUtil {
     private static final Properties PROPERTIES = new Properties();
+
+    private PropertiesUtil() {}
 
     static {
         try (InputStream input = PropertiesUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
