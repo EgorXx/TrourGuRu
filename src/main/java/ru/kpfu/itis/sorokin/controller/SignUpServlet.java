@@ -1,5 +1,11 @@
 package ru.kpfu.itis.sorokin.controller;
 
+import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
+import ru.kpfu.itis.sorokin.entity.Role;
+import ru.kpfu.itis.sorokin.exception.ValidationException;
+import ru.kpfu.itis.sorokin.service.UserService;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +17,15 @@ import java.util.Map;
 
 @WebServlet(name="SignUp", urlPatterns="/sign_up")
 public class SignUpServlet extends HttpServlet {
+
+    UserService userService;
+
+    @Override
+    public void init() throws ServletException {
+        ServletContext servletContext = getServletContext();
+
+        userService = (UserService) servletContext.getAttribute("userService");
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,14 +44,10 @@ public class SignUpServlet extends HttpServlet {
 
         if (email == null || email.isBlank()) {
             errors.put("email", "Поле email не может быть пустым");
-        } else if (!email.matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$.")) {
-            errors.put("email", "Несоответствующий формат почты");
         }
 
         if (username == null || username.isBlank()) {
             errors.put("username", "Поле username не может быть пустым");
-        } else if (username.length() > 63) {
-            errors.put("username", "Слишком длинное имя пользователя");
         }
 
         if (password == null || password.isBlank()) {
@@ -54,8 +65,28 @@ public class SignUpServlet extends HttpServlet {
             return;
         }
 
+        Role role = Role.valueOf(req.getParameter("role"));
+
+        try {
+            UserSignUpDto userSignUpDto = new UserSignUpDto(
+                    email,
+                    username,
+                    password,
+                    role
+            );
+
+            userService.signUp(userSignUpDto);
+        } catch (ValidationException e) {
+            Map<String, String> serviceErrors = e.getErrors();
+
+            req.setAttribute("errors", serviceErrors);
+            req.setAttribute("username", username);
+            req.setAttribute("email", email);
+            req.setAttribute("contextPath", req.getContextPath());
+            req.getRequestDispatcher("sign_up.ftl").forward(req, resp);
+        }
+
 
     }
-
 
 }
