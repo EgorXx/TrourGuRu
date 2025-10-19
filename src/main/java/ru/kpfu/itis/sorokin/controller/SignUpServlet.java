@@ -29,8 +29,6 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("contextPath", req.getContextPath());
-
         req.getRequestDispatcher("sign_up.ftl").forward(req, resp);
     }
 
@@ -60,7 +58,6 @@ public class SignUpServlet extends HttpServlet {
             req.setAttribute("errors", errors);
             req.setAttribute("username", username);
             req.setAttribute("email", email);
-            req.setAttribute("contextPath", req.getContextPath());
             req.getRequestDispatcher("sign_up.ftl").forward(req, resp);
             return;
         }
@@ -82,7 +79,6 @@ public class SignUpServlet extends HttpServlet {
             req.setAttribute("errors", serviceErrors);
             req.setAttribute("username", username);
             req.setAttribute("email", email);
-            req.setAttribute("contextPath", req.getContextPath());
             req.getRequestDispatcher("sign_up.ftl").forward(req, resp);
         }
 
