@@ -8,12 +8,20 @@ import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 import java.sql.*;
 
 public class OperatorDaoImpl implements OperatorDao {
-    String sql_save = "INSERT INTO operator (user_id, company_name, description, status) VALUES (?, ?, ?, ?::general_status)";
+    private static final String SQL_SAVE = "INSERT INTO operator (user_id, company_name, description, status) VALUES (?, ?, ?, ?::general_status)";
 
     @Override
     public Operator save(Operator operator) {
-        try (Connection connection = DataBaseConnectionUtil.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql_save)) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection()) {
+            return save(operator, connection);
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed save operator");
+        }
+    }
+
+    @Override
+    public Operator save(Operator operator, Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE)) {
 
             preparedStatement.setInt(1, operator.getUserId());
             preparedStatement.setString(2, operator.getCompanyName());

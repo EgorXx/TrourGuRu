@@ -10,13 +10,21 @@ import java.sql.*;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
-    String sql_save = "INSERT INTO users (email, name, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
-    String sql_select_by_email = "SELECT id, email, name, password_hash, role FROM users WHERE email = ?";
+    private static final String SQL_SAVE = "INSERT INTO users (email, name, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
+    private static final String SQL_SELECTED_BY_EMAIL = "SELECT id, email, name, password_hash, role FROM users WHERE email = ?";
 
     @Override
     public User save(User user) {
-        try (Connection connection = DataBaseConnectionUtil.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql_save, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection()) {
+            return save(user, connection);
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed save user", e);
+        }
+    }
+
+    @Override
+    public User save(User user, Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getName());
@@ -46,7 +54,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> findByEmail(String email) {
         try (Connection connection = DataBaseConnectionUtil.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql_select_by_email)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECTED_BY_EMAIL)) {
 
             preparedStatement.setString(1, email);
 
