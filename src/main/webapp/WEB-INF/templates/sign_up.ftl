@@ -58,7 +58,7 @@
 
         <div class="login-link">
             <span>Уже есть аккаунт? </span>
-            <a href="/login">Войти</a>
+            <a href="${contextPath}/login">Войти</a>
         </div>
 </#macro>
 
