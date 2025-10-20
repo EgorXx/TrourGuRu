@@ -1,8 +1,10 @@
 package ru.kpfu.itis.sorokin.controller;
 
+import ru.kpfu.itis.sorokin.dto.OperatorSignUpDto;
 import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
+import ru.kpfu.itis.sorokin.service.OperatorService;
 import ru.kpfu.itis.sorokin.service.UserService;
 
 import javax.servlet.ServletContext;
@@ -19,12 +21,14 @@ import java.util.Map;
 public class SignUpServlet extends HttpServlet {
 
     UserService userService;
+    OperatorService operatorService;
 
     @Override
     public void init() throws ServletException {
         ServletContext servletContext = getServletContext();
 
         userService = (UserService) servletContext.getAttribute("userService");
+        operatorService = (OperatorService) servletContext.getAttribute("operatorService");
     }
 
     @Override
@@ -37,15 +41,13 @@ public class SignUpServlet extends HttpServlet {
         Map<String, String> errors = new HashMap<>();
 
         String email = req.getParameter("email");
-        String username = req.getParameter("username");
+        String username = null;
+        String companyName = null;
         String password = req.getParameter("password");
+        Role role = Role.valueOf(req.getParameter("role"));
 
         if (email == null || email.isBlank()) {
             errors.put("email", "Поле email не может быть пустым");
-        }
-
-        if (username == null || username.isBlank()) {
-            errors.put("username", "Поле username не может быть пустым");
         }
 
         if (password == null || password.isBlank()) {
@@ -54,25 +56,47 @@ public class SignUpServlet extends HttpServlet {
             errors.put("password", "Пароль слишком короткий (минимальная длина: 8)");
         }
 
+
+        if (role == Role.USER) {
+            username = req.getParameter("username");
+
+            if (username == null || username.isBlank()) {
+                errors.put("username", "Поле \"Имя пользователя\" не может быть пустым");
+            }
+
+        } else if (role == Role.OPERATOR) {
+            companyName = req.getParameter("company_name");
+
+            if (companyName == null || companyName.isBlank()) {
+                errors.put("company_name", "Поле \"Название компании\" не может быть пустым");
+            }
+
+        } else {
+            errors.put("role", "Выбрана недопустимая роль");
+        }
+
         if (!errors.isEmpty()) {
             req.setAttribute("errors", errors);
             req.setAttribute("username", username);
+            req.setAttribute("company_name", companyName);
             req.setAttribute("email", email);
             req.getRequestDispatcher("sign_up.ftl").forward(req, resp);
             return;
         }
 
-        Role role = Role.valueOf(req.getParameter("role"));
+        UserSignUpDto userSignUpDto = new UserSignUpDto(email, username, password);
+
+        OperatorSignUpDto operatorSignUpDto = new OperatorSignUpDto(companyName);
+
 
         try {
-            UserSignUpDto userSignUpDto = new UserSignUpDto(
-                    email,
-                    username,
-                    password,
-                    role
-            );
+            if (role == Role.USER) {
+                userService.signUp(userSignUpDto);
+            } else {
+                operatorService.signUp(userSignUpDto, operatorSignUpDto);
+            }
 
-            userService.signUp(userSignUpDto);
+            resp.sendRedirect(req.getContextPath() + "/login");
         } catch (ValidationException e) {
             Map<String, String> serviceErrors = e.getErrors();
 
@@ -81,8 +105,6 @@ public class SignUpServlet extends HttpServlet {
             req.setAttribute("email", email);
             req.getRequestDispatcher("sign_up.ftl").forward(req, resp);
         }
-
-
     }
 
 }

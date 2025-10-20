@@ -14,6 +14,10 @@
             <p>Быстрый и простой способ начать ваше путешествие</p>
         </div>
 
+        <#if errors?? && errors.role??>
+                <span id="role-error" class="error-message">Ошибка: ${errors.role}</span>
+            </#if>
+
         <div class="role-selector btn-group d-flex p-1 mb-4" role="group">
             <button type="button" class="btn active flex-fill">Пользователь</button>
             <button type="button" class="btn flex-fill">Тур оператор</button>
@@ -37,6 +41,9 @@
             </div>
 
             <div id="operator-name-field" class="mb-3 d-none">
+                <#if errors?? && errors.company_name??>
+                    <span id="company_name-error" class="error-message">Ошибка: ${errors.company_name}</span>
+                </#if>
                 <input type="text" id="company_name" class="form-control" name="company_name" placeholder="Название компании" required disabled>
             </div>
 
