@@ -19,7 +19,7 @@ public class InitListener implements ServletContextListener {
         try {
             UserDao userDao = new UserDaoImpl();
             OperatorDao operatorDao = new OperatorDaoImpl();
-            sce.getServletContext().setAttribute("userService", new UserServiceImpl(userDao));
+            sce.getServletContext().setAttribute("userService", new UserServiceImpl(userDao, operatorDao));
             sce.getServletContext().setAttribute("operatorService", new OperatorServiceImpl(userDao, operatorDao));
         } catch (Exception e) {
             throw new RuntimeException(e);

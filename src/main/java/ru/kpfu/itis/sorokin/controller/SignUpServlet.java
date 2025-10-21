@@ -20,8 +20,8 @@ import java.util.Map;
 @WebServlet(name="SignUp", urlPatterns="/sign_up")
 public class SignUpServlet extends HttpServlet {
 
-    UserService userService;
-    OperatorService operatorService;
+    private UserService userService;
+    private OperatorService operatorService;
 
     @Override
     public void init() throws ServletException {

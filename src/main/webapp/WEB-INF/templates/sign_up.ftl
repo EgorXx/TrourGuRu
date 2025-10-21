@@ -16,7 +16,7 @@
 
         <#if errors?? && errors.role??>
                 <span id="role-error" class="error-message">Ошибка: ${errors.role}</span>
-            </#if>
+        </#if>
 
         <div class="role-selector btn-group d-flex p-1 mb-4" role="group">
             <button type="button" class="btn active flex-fill">Пользователь</button>
