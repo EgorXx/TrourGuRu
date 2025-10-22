@@ -12,10 +12,10 @@
 
     <div class="profile-card">
         <div class="profile-card-header">
-            <a href="#">
+            <a href="${contextPath}/main">
                 <img src="${contextPath}/assets/image/logo.jpg" alt="TourGuRu" width="120">
             </a>
-            <a href="#" class="btn-logout">Выйти</a>
+            <a href="${contextPath}/logout" class="btn-logout">Выйти</a>
         </div>
 
         <div>
