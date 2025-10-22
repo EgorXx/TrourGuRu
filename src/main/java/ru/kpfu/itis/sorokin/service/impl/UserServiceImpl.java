@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         }
 
         if (user.getRole() == Role.USER || user.getRole() == Role.ADMIN) {
-            return Optional.of(new UserSessionDto(user.getId(), user.getName(), user.getRole()));
+            return Optional.of(new UserSessionDto(user.getId(), user.getName(), user.getEmail(), user.getRole()));
         } else {
             Optional<Operator> operatorOptional = operatorDao.findByUserId(user.getId());
 
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             Operator operator = operatorOptional.get();
 
             if (operator.getStatus() == Status.APPROVED) {
-                return Optional.of(new UserSessionDto(operator.getUserId(), operator.getCompanyName(), user.getRole()));
+                return Optional.of(new UserSessionDto(operator.getUserId(), operator.getCompanyName(), user.getEmail(), user.getRole()));
             } else if (operator.getStatus() == Status.PENDING) {
                 throw new AuthException("Ваш аккаунт ожидает подтверждения администратором.");
             } else {

@@ -2,7 +2,7 @@ package ru.kpfu.itis.sorokin.dto;
 
 import ru.kpfu.itis.sorokin.entity.Role;
 
-public record UserSessionDto(Integer id, String displayName, Role role) {
+public record UserSessionDto(Integer id, String displayName, String email, Role role) {
     public boolean isAdmin() {
         return role == Role.ADMIN;
     }

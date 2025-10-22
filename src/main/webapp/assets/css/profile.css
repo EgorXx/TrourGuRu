@@ -1,0 +1,105 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+            linear-gradient(90deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            linear-gradient(270deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            url('../image/background_main_page.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px);
+}
+
+.profile-card {
+    max-width: 340px;
+    width: 100%;
+    background-color: white;
+    border-radius: 1.25rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-card-header .btn-logout {
+    font-weight: 600;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.profile-card-header .btn-logout:hover {
+    color: #28a745;
+}
+
+.profile-card h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.profile-card .text-muted {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    word-break: break-all;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn-profile-action {
+    display: flex;
+    align-items: center;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-profile-action:hover {
+    background-color: #218838;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.3);
+}
+
+.btn-profile-action .icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    border-radius: 50%;
+    color: #28a745;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+}
