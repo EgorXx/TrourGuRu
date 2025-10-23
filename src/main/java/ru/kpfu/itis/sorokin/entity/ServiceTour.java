@@ -29,7 +29,7 @@ public class ServiceTour {
         this.id = id;
     }
 
-    public void setTour_id(Integer tourId) {
+    public void setTourId(Integer tourId) {
         this.tourId = tourId;
     }
 

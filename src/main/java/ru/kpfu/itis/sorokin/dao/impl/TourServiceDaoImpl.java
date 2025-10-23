@@ -2,11 +2,13 @@ package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.TourCategoryDao;
 import ru.kpfu.itis.sorokin.dao.TourServiceDao;
+import ru.kpfu.itis.sorokin.entity.ProgramTour;
 import ru.kpfu.itis.sorokin.entity.ServiceTour;
 import ru.kpfu.itis.sorokin.entity.TourEntity;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TourServiceDaoImpl implements TourServiceDao {
@@ -38,5 +40,17 @@ public class TourServiceDaoImpl implements TourServiceDao {
         } catch (SQLException e) {
             throw new DataAccessException("Failed save service_tour", e);
         }
+    }
+
+    @Override
+    public List<ServiceTour> saveAll(List<ServiceTour> serviceTours, Connection connection) {
+        List<ServiceTour> services = new ArrayList<>();
+
+        for (ServiceTour serviceTour : serviceTours) {
+            ServiceTour service = save(serviceTour, connection);
+            services.add(service);
+        }
+
+        return services;
     }
 }

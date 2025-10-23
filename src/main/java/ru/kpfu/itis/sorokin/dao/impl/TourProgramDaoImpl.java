@@ -6,6 +6,8 @@ import ru.kpfu.itis.sorokin.entity.ServiceTour;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TourProgramDaoImpl implements TourProgramDao {
     private static final String SQL_SAVE = "INSERT INTO service_toure (tour_id, title, description, dayNumber) VALUES (?, ?, ?, ?)";
@@ -39,4 +41,17 @@ public class TourProgramDaoImpl implements TourProgramDao {
             throw new DataAccessException("Failed save program_tour", e);
         }
     }
+
+    @Override
+    public List<ProgramTour> saveAll(List<ProgramTour> programTours, Connection connection) {
+        List<ProgramTour> programs = new ArrayList<>();
+
+        for (ProgramTour programTour : programTours) {
+            ProgramTour program = save(programTour, connection);
+            programs.add(program);
+        }
+
+        return programs;
+    }
+
 }
