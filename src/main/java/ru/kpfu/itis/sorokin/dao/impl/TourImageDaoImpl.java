@@ -6,13 +6,14 @@ import ru.kpfu.itis.sorokin.entity.ServiceTour;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TourImageDaoImpl implements TourImageDao {
     private static final String SQL_SAVE = "INSERT INTO tour_image (tour_id, image_url, is_main) VALUES (?, ?, ?)";
 
     @Override
-    public void add(ImageTour imageTour, Connection connection) {
+    public ImageTour save(ImageTour imageTour, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setInt(1, imageTour.getTourId());
@@ -25,15 +26,30 @@ public class TourImageDaoImpl implements TourImageDao {
                 throw new DataAccessException("Failed save tour_image, no insert row");
             }
 
+            try (ResultSet resultSet = preparedStatement.getGeneratedKeys()) {
+                if (resultSet.next()) {
+                    imageTour.setId(resultSet.getInt("id"));
+                    return imageTour;
+                } else {
+                    throw new DataAccessException("Failed extract tour_image id");
+                }
+
+            }
+
         } catch (SQLException e) {
             throw new DataAccessException("Failed save tour_image", e);
         }
     }
 
     @Override
-    public void addAll(List<ImageTour> imageTours, Connection connection) {
+    public List<ImageTour> saveAll(List<ImageTour> imageTours, Connection connection) {
+        List<ImageTour> images = new ArrayList<>();
+
         for (ImageTour imageTour : imageTours) {
-            add(imageTour, connection);
+            ImageTour image = save(imageTour, connection);
+            images.add(image);
         }
+
+        return images;
     }
 }

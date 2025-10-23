@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 
 public interface TourImageDao {
-    void add(ImageTour imageTour, Connection connection);
+    ImageTour save(ImageTour imageTour, Connection connection);
 
-    void addAll(List<ImageTour> imageTours, Connection connection);
+    List<ImageTour> saveAll(List<ImageTour> imageTours, Connection connection);
 }
