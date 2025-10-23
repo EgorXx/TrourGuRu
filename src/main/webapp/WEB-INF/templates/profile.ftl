@@ -57,7 +57,7 @@
                     Мои туры
                 </a>
 
-                <a href="#" class="btn btn-profile-action">
+                <a href="${contextPath}/operator/add-tour" class="btn btn-profile-action">
                     <span class="icon-circle"><i class="bi bi-plus-circle"></i></span>
                     Добавить тур
                 </a>
