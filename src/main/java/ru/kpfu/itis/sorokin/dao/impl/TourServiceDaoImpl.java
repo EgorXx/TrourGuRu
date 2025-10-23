@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TourServiceDaoImpl implements TourServiceDao {
-    private static final String SQL_SAVE = "INSERT INTO service_toure (tour_id, title) VALUES (?, ?)";
+    private static final String SQL_SAVE = "INSERT INTO service_tour (tour_id, title) VALUES (?, ?)";
 
     @Override
     public ServiceTour save(ServiceTour serviceTour, Connection connection) {

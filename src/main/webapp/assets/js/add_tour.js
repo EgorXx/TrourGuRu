@@ -18,8 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
             dayDiv.className = 'program-day';
             dayDiv.innerHTML = `
                         <h6>День ${i}</h6>
-                        <input type="text" name="program_day_${i}_title" class="form-control mb-2" placeholder="Заголовок дня ${i}">
-                        <textarea name="program_day_${i}_description" class="form-control" rows="2" placeholder="Описание дня ${i}"></textarea>
+                        <input type="text" name="program_title" class="form-control mb-2" placeholder="Заголовок дня ${i}">
+                        <textarea type="text" name="program_description" class="form-control" rows="2" placeholder="Описание дня ${i}"></textarea>
+                        <input type="hidden" name="program_day" value="${i}">
                     `;
             programDaysContainer.appendChild(dayDiv);
         }

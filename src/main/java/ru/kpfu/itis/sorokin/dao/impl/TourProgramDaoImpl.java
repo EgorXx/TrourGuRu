@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TourProgramDaoImpl implements TourProgramDao {
-    private static final String SQL_SAVE = "INSERT INTO service_toure (tour_id, title, description, dayNumber) VALUES (?, ?, ?, ?)";
+    private static final String SQL_SAVE = "INSERT INTO program_tour (tour_id, title, description, day_number) VALUES (?, ?, ?, ?)";
 
     @Override
     public ProgramTour save(ProgramTour programTour, Connection connection) {

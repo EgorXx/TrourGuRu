@@ -1,17 +1,10 @@
 package ru.kpfu.itis.sorokin.listener;
 
 import com.cloudinary.Cloudinary;
-import ru.kpfu.itis.sorokin.dao.CategoryDao;
-import ru.kpfu.itis.sorokin.dao.OperatorDao;
-import ru.kpfu.itis.sorokin.dao.UserDao;
-import ru.kpfu.itis.sorokin.dao.impl.CategoryDaoImpl;
-import ru.kpfu.itis.sorokin.dao.impl.OperatorDaoImpl;
-import ru.kpfu.itis.sorokin.dao.impl.UserDaoImpl;
+import ru.kpfu.itis.sorokin.dao.*;
+import ru.kpfu.itis.sorokin.dao.impl.*;
 import ru.kpfu.itis.sorokin.service.ImageUploadService;
-import ru.kpfu.itis.sorokin.service.impl.CategoryServiceImpl;
-import ru.kpfu.itis.sorokin.service.impl.CloudinaryImageUploadService;
-import ru.kpfu.itis.sorokin.service.impl.OperatorServiceImpl;
-import ru.kpfu.itis.sorokin.service.impl.UserServiceImpl;
+import ru.kpfu.itis.sorokin.service.impl.*;
 import ru.kpfu.itis.sorokin.util.PropertiesUtil;
 
 import javax.servlet.ServletContextEvent;
@@ -40,10 +33,16 @@ public class InitListener implements ServletContextListener {
             UserDao userDao = new UserDaoImpl();
             OperatorDao operatorDao = new OperatorDaoImpl();
             CategoryDao categoryDao = new CategoryDaoImpl();
+            TourCategoryDao tourCategoryDao = new TourCategoryDaoImpl();
+            TourDao tourDao = new TourDaoImpl();
+            TourImageDao tourImageDao = new TourImageDaoImpl();
+            TourProgramDao tourProgramDao = new TourProgramDaoImpl();
+            TourServiceDao tourServiceDao = new TourServiceDaoImpl();
 
             sce.getServletContext().setAttribute("userService", new UserServiceImpl(userDao, operatorDao));
             sce.getServletContext().setAttribute("operatorService", new OperatorServiceImpl(userDao, operatorDao));
             sce.getServletContext().setAttribute("categoryService", new CategoryServiceImpl(categoryDao));
+            sce.getServletContext().setAttribute("tourService", new TourServiceImpl(tourDao, tourProgramDao, tourServiceDao, tourCategoryDao, imageUploadService, tourImageDao));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

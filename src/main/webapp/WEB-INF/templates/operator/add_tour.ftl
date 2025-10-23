@@ -14,17 +14,29 @@
             <h2>Добавить новый тур</h2>
         </div>
 
-        <form class="form-body" action="/add-tour" method="post" enctype="multipart/form-data">
+        <#if errors?? && errors?has_content>
+            <div class="error-block">
+                <h6>Исправьте следующие ошибки:</h6>
+                <ul>
+                    <#list errors as field, message>
+                        <li>${message}</li>
+                    </#list>
+                </ul>
+            </div>
+        </#if>
+
+        <form class="form-body" action="${contextPath}/operator/add-tour" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-6">
+
                     <div class="mb-3">
                         <label for="tourTitle" class="form-label">Название тура</label>
-                        <input type="text" class="form-control" id="tourTitle" name="title" required>
+                        <input type="text" class="form-control" id="tourTitle" name="title" value="${(tourTitle)!''}">
                     </div>
 
                     <div class="mb-3">
                         <label for="tourDestination" class="form-label">Место, Город</label>
-                        <input type="text" class="form-control" id="tourDestination" name="destination" required>
+                        <input type="text" class="form-control" id="tourDestination" name="destination" value="${(tourDestination)!''}" required>
                     </div>
 
                     <div class="mb-3">
@@ -34,7 +46,7 @@
 
                     <div class="mb-3">
                         <label for="tourDescription" class="form-label">Описание тура</label>
-                        <textarea class="form-control" id="tourDescription" name="description" rows="4" required></textarea>
+                        <textarea class="form-control" id="tourDescription" name="description" rows="4" required>${(tourDescription)!''}</textarea>
                     </div>
 
                     <div class="mb-3">
@@ -52,6 +64,7 @@
 
                 <div class="col-md-6">
                     <div class="mb-3">
+
                         <label class="form-label">Категории тура</label>
                         <#if categories??>
                             <#list categories as category>
@@ -61,11 +74,7 @@
                                 </div>
                             </#list>
                         </#if>
-<#--                        <div class="form-check"><input class="form-check-input" type="checkbox" name="categories" value="1" id="cat1"><label class="form-check-label" for="cat1">Природа</label></div>-->
-<#--                        <div class="form-check"><input class="form-check-input" type="checkbox" name="categories" value="2" id="cat2"><label class="form-check-label" for="cat2">Горы</label></div>-->
-<#--                        <div class="form-check"><input class="form-check-input" type="checkbox" name="categories" value="3" id="cat3"><label class="form-check-label" for="cat3">Озера</label></div>-->
-<#--                        <div class="form-check"><input class="form-check-input" type="checkbox" name="categories" value="4" id="cat4"><label class="form-check-label" for="cat4">Культура</label></div>-->
-<#--                        <div class="form-check"><input class="form-check-input" type="checkbox" name="categories" value="5" id="cat5"><label class="form-check-label" for="cat5">Активный отдых</label></div>-->
+
                     </div>
 
                     <div class="mb-3">
