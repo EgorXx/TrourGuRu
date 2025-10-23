@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class CloudinaryImageUploadService implements ImageUploadService {
     private Cloudinary cloudinary;
