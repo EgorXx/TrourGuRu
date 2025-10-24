@@ -3,7 +3,7 @@ package ru.kpfu.itis.sorokin.listener;
 import com.cloudinary.Cloudinary;
 import ru.kpfu.itis.sorokin.dao.*;
 import ru.kpfu.itis.sorokin.dao.impl.*;
-import ru.kpfu.itis.sorokin.service.ImageUploadService;
+import ru.kpfu.itis.sorokin.service.*;
 import ru.kpfu.itis.sorokin.service.impl.*;
 import ru.kpfu.itis.sorokin.util.PropertiesUtil;
 
@@ -39,10 +39,15 @@ public class InitListener implements ServletContextListener {
             TourProgramDao tourProgramDao = new TourProgramDaoImpl();
             TourServiceDao tourServiceDao = new TourServiceDaoImpl();
 
-            sce.getServletContext().setAttribute("userService", new UserServiceImpl(userDao, operatorDao));
-            sce.getServletContext().setAttribute("operatorService", new OperatorServiceImpl(userDao, operatorDao));
+            UserService userService = new UserServiceImpl(userDao, operatorDao);
+            OperatorService operatorService = new OperatorServiceImpl(userDao, operatorDao);
+            CategoryService categoryService = new CategoryServiceImpl(categoryDao);
+            TourService tourService = new TourServiceImpl(tourDao, tourProgramDao, tourServiceDao, tourCategoryDao, imageUploadService, tourImageDao, operatorService);
+
+            sce.getServletContext().setAttribute("userService", userService);
+            sce.getServletContext().setAttribute("operatorService", operatorService);
             sce.getServletContext().setAttribute("categoryService", new CategoryServiceImpl(categoryDao));
-            sce.getServletContext().setAttribute("tourService", new TourServiceImpl(tourDao, tourProgramDao, tourServiceDao, tourCategoryDao, imageUploadService, tourImageDao));
+            sce.getServletContext().setAttribute("tourService", tourService);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

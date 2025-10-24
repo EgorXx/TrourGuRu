@@ -16,6 +16,19 @@ public class Tour {
     private List<ProgramTour> programs;
     private List<ImageTour> images;
 
+    public Tour(Integer id, String title, Integer operatorId, String destination, String description, Integer duration, List<Category> categories, List<ServiceTour> services, List<ProgramTour> programs, List<ImageTour> images) {
+        this.id = id;
+        this.title = title;
+        this.operatorId = operatorId;
+        this.destination = destination;
+        this.description = description;
+        this.duration = duration;
+        this.categories = categories;
+        this.services = services;
+        this.programs = programs;
+        this.images = images;
+    }
+
     public Tour() {
         categories = new ArrayList<>();
         services = new ArrayList<>();

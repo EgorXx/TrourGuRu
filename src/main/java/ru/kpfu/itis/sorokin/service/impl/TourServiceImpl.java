@@ -6,15 +6,13 @@ import ru.kpfu.itis.sorokin.entity.*;
 import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.ImageUploadService;
+import ru.kpfu.itis.sorokin.service.OperatorService;
 import ru.kpfu.itis.sorokin.service.TourService;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TourServiceImpl implements TourService {
     private TourDao tourDao;
@@ -23,15 +21,17 @@ public class TourServiceImpl implements TourService {
     private TourCategoryDao tourCategoryDao;
     private ImageUploadService imageUploadService;
     private TourImageDao tourImageDao;
+    private OperatorService operatorService;
 
     public TourServiceImpl(TourDao tourDao, TourProgramDao tourProgramDao, TourServiceDao tourServiceDao,
-                           TourCategoryDao tourCategoryDao, ImageUploadService imageUploadService, TourImageDao tourImageDao) {
+                           TourCategoryDao tourCategoryDao, ImageUploadService imageUploadService, TourImageDao tourImageDao, OperatorService operatorService) {
         this.tourDao = tourDao;
         this.tourProgramDao = tourProgramDao;
         this.tourServiceDao = tourServiceDao;
         this.tourCategoryDao = tourCategoryDao;
         this.imageUploadService = imageUploadService;
         this.tourImageDao = tourImageDao;
+        this.operatorService = operatorService;
     }
 
     @Override
@@ -138,6 +138,60 @@ public class TourServiceImpl implements TourService {
                 } catch (SQLException e) {}
             }
         }
+    }
+
+    @Override
+    public TourDetailDto findById(Integer tourId) {
+
+        Optional<TourEntity> tourEntityOptional = tourDao.findById(tourId);
+
+        if (tourEntityOptional.isEmpty()) {
+            throw new ServiceException("Tour with id " + tourId + " not found");
+        }
+
+        TourEntity tourEntity = tourEntityOptional.get();
+
+        List<Category> сategories = tourCategoryDao.findByTourId(tourId);
+
+        if (сategories.isEmpty()) {
+            throw new ServiceException("Tour with id " + tourId + " has no categories");
+        }
+
+        List<ServiceTour> services = tourServiceDao.findByTourId(tourId);
+
+        if (services.isEmpty()) {
+            throw new ServiceException("Tour with id " + tourId + " has no services");
+        }
+
+        List<ProgramTour> programs = tourProgramDao.findByTourId(tourId);
+
+        if (programs.isEmpty()) {
+            throw new ServiceException("Tour with id " + tourId + " has no programs");
+        }
+
+        List<ImageTour> images = tourImageDao.findByTourId(tourId);
+
+        if (images.isEmpty()) {
+            throw new ServiceException("Tour with id " + tourId + " has no images");
+        }
+
+        OperatorViewDto operatorViewDto = operatorService.findById(tourEntity.getOperatorId());
+
+        return new TourDetailDto(
+                tourEntity.getId(),
+                tourEntity.getTitle(),
+                tourEntity.getDestination(),
+                tourEntity.getDescription(),
+                tourEntity.getDuration(),
+                operatorViewDto.id(),
+                operatorViewDto.companyName(),
+                operatorViewDto.description(),
+                сategories,
+                services,
+                programs,
+                images
+        );
+
     }
 
     private void validate(TourCreateDto tourCreateDto, List<ImageTourAddDto> imageTourAddDtos) throws ValidationException {
