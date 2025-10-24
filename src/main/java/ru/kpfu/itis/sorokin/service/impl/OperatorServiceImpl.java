@@ -3,6 +3,7 @@ package ru.kpfu.itis.sorokin.service.impl;
 import ru.kpfu.itis.sorokin.dao.OperatorDao;
 import ru.kpfu.itis.sorokin.dao.UserDao;
 import ru.kpfu.itis.sorokin.dto.OperatorSignUpDto;
+import ru.kpfu.itis.sorokin.dto.OperatorViewDto;
 import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
 import ru.kpfu.itis.sorokin.entity.Operator;
 import ru.kpfu.itis.sorokin.entity.Role;
@@ -77,6 +78,18 @@ public class OperatorServiceImpl  implements OperatorService {
                 }
             }
         }
+    }
+
+    @Override
+    public OperatorViewDto findById(Integer userId) {
+        Operator operator = operatorDao.findByUserId(userId)
+                .orElseThrow(() -> new ServiceException("Operator with userId " + userId + " not found"));
+
+        return new OperatorViewDto(
+                userId,
+                operator.getCompanyName(),
+                operator.getDescription()
+        );
     }
 
     private void validateSignUpOperator(UserSignUpDto userSignUpDto, OperatorSignUpDto operatorSignUpDto) throws ValidationException {
