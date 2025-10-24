@@ -2,8 +2,8 @@ package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.TourImageDao;
 import ru.kpfu.itis.sorokin.entity.ImageTour;
-import ru.kpfu.itis.sorokin.entity.ServiceTour;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
+import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.List;
 
 public class TourImageDaoImpl implements TourImageDao {
     private static final String SQL_SAVE = "INSERT INTO tour_image (tour_id, image_url, is_main) VALUES (?, ?, ?)";
+    private static final String SQl_SELECT_IMAGES_BY_TOUR_ID = "SELECT id, image_url, is_main FROM tour_image WHERE tour_id=?";
 
     @Override
     public ImageTour save(ImageTour imageTour, Connection connection) {
@@ -51,5 +52,35 @@ public class TourImageDaoImpl implements TourImageDao {
         }
 
         return images;
+    }
+
+    @Override
+    public List<ImageTour> findByTourId(Integer tourId) {
+        List<ImageTour> images = new ArrayList<>();
+
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQl_SELECT_IMAGES_BY_TOUR_ID)) {
+
+            preparedStatement.setInt(1, tourId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ImageTour imageTour = new ImageTour(
+                            resultSet.getInt("id"),
+                            tourId,
+                            resultSet.getString("image_url"),
+                            resultSet.getBoolean("is_main")
+                    );
+
+                    images.add(imageTour);
+                }
+
+                return images;
+
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select images by tourId", e);
+        }
     }
 }

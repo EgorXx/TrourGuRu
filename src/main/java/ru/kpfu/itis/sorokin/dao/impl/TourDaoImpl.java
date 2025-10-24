@@ -1,13 +1,19 @@
 package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.TourDao;
+import ru.kpfu.itis.sorokin.entity.Role;
+import ru.kpfu.itis.sorokin.entity.Tour;
 import ru.kpfu.itis.sorokin.entity.TourEntity;
+import ru.kpfu.itis.sorokin.entity.User;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
+import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
+import java.util.Optional;
 
 public class TourDaoImpl implements TourDao {
     private static final String SQL_SAVE = "INSERT INTO tour (title, operator_id, destination, description, duration) VALUES (?, ?, ?, ?, ?)";
+    private static final String SQL_FIND_BY_ID = "SELECT title, operator_id, destination, description, duration FROM tour WHERE id=?";
 
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {
@@ -38,5 +44,34 @@ public class TourDaoImpl implements TourDao {
         } catch (SQLException e) {
             throw new DataAccessException("Failed save tour", e);
         }
+    }
+
+    @Override
+    public Optional<TourEntity> findById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(
+                            new TourEntity(
+                                    id,
+                                    resultSet.getString("title"),
+                                    resultSet.getInt("operator_id"),
+                                    resultSet.getString("destination"),
+                                    resultSet.getString("description"),
+                                    resultSet.getInt("duration")
+                            )
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select tourEntity by id", e);
+        }
+
+        return Optional.empty();
     }
 }

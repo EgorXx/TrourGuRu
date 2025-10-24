@@ -4,6 +4,7 @@ import ru.kpfu.itis.sorokin.dao.TourProgramDao;
 import ru.kpfu.itis.sorokin.entity.ProgramTour;
 import ru.kpfu.itis.sorokin.entity.ServiceTour;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
+import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class TourProgramDaoImpl implements TourProgramDao {
     private static final String SQL_SAVE = "INSERT INTO program_tour (tour_id, title, description, day_number) VALUES (?, ?, ?, ?)";
+    private static final String SQl_SELECT_PROGRAMS_BY_TOUR_ID = "SELECT id, title, description, day_number FROM program_tour WHERE tour_id=?";
 
     @Override
     public ProgramTour save(ProgramTour programTour, Connection connection) {
@@ -52,6 +54,37 @@ public class TourProgramDaoImpl implements TourProgramDao {
         }
 
         return programs;
+    }
+
+    @Override
+    public List<ProgramTour> findByTourId(Integer tourId) {
+        List<ProgramTour> programs = new ArrayList<>();
+
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQl_SELECT_PROGRAMS_BY_TOUR_ID)) {
+
+            preparedStatement.setInt(1, tourId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    ProgramTour programTour = new ProgramTour(
+                            resultSet.getInt("id"),
+                            tourId,
+                            resultSet.getString("title"),
+                            resultSet.getString("description"),
+                            resultSet.getInt("day_number")
+                    );
+
+                    programs.add(programTour);
+                }
+
+                return programs;
+
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select programs by tourId", e);
+        }
     }
 
 }
