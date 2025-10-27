@@ -207,6 +207,13 @@ public class TourServiceImpl implements TourService {
 
     }
 
+    @Override
+    public List<CardTourDto> getTours(int page, int pageSize) {
+        int limit = pageSize;
+        int offset = (page - 1) * pageSize;
+        return tourDao.findAll(limit, offset);
+    }
+
     private void validate(TourCreateDto tourCreateDto, List<ImageTourAddDto> imageTourAddDtos) throws ValidationException {
         Map<String, String> errors = new HashMap<>();
 
