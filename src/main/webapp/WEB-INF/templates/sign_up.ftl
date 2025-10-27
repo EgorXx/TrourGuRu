@@ -1,6 +1,6 @@
 <#include 'base.ftl'>
 
-<#macro title>Регистрация</#macro>
+<#macro page_title>Регистрация</#macro>
 <#macro page_styles>
     <link rel="stylesheet" href="${contextPath}/assets/css/sign_up.css">
 </#macro>

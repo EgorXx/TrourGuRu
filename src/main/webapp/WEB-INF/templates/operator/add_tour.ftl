@@ -1,6 +1,6 @@
 <#include "../base.ftl">
 
-<#macro title>Туры по России — Главная</#macro>
+<#macro page_title>Туры по России — Главная</#macro>
 
 <#macro page_styles>
     <link rel="stylesheet" href="${contextPath}/assets/css/add_tour.css">

@@ -1,6 +1,6 @@
 <#include "base.ftl">
 
-<#macro title>Личный кабинет</#macro>
+<#macro page_title>Личный кабинет</#macro>
 
 <#macro page_styles>
     <link rel="stylesheet" href="${contextPath}/assets/css/profile.css">

@@ -1,6 +1,6 @@
 <header class="bg-white border-bottom sticky-top">
     <div class="container py-2 d-flex align-items-center justify-content-between">
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="${contextPath}/main">
             <img src="${contextPath}/assets/image/logo.jpg" alt="TourGuRu" width="144" height="42">
         </a>
 

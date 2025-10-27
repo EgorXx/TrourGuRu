@@ -1,0 +1,288 @@
+body {
+    min-height: 100vh;
+}
+
+page-wrapper {
+    min-height: calc(100vh - 72px - 59px);
+}
+
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+            linear-gradient(90deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            linear-gradient(270deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            url('../image/background_main_page.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px);
+}
+
+.my-green {
+    color: #29a143;
+}
+
+.bg-my-green {
+    background-color: #29a143;
+}
+
+.btn-nav-outline {
+    color: #29a143;
+    border-color: #29a143;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-nav-outline:hover {
+    color: #ffffff;
+    background-color: #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-nav-primary {
+    color: #ffffff;
+    background-color: #29a143;
+    border-color: #29a143;
+}
+
+.btn-nav-primary:hover {
+    color: #29a143;
+    background-color: #ffffff;
+    border-color: #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.tour-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 2rem auto;
+}
+
+.tour-header {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.tour-image {
+    width: 280px;
+    height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.tour-info {
+    flex: 1;
+}
+
+.tour-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.info-row i {
+    color: #29a143;
+    font-size: 1.2rem;
+    margin-right: 0.6rem;
+    width: 24px;
+}
+
+.categories {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.category-badge {
+    background-color: #29a143;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.description-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.description-text {
+    color: #666;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.content-section {
+    margin-bottom: 2rem;
+}
+
+.services-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.services-list li {
+    padding: 0.5rem 0;
+    color: #555;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.services-list i {
+    color: #29a143;
+    margin-right: 0.6rem;
+    font-size: 1rem;
+}
+
+.program-day {
+    background-color: #f8f9fa;
+    border-left: 4px solid #29a143;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+}
+
+.day-number {
+    color: #29a143;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+}
+
+.day-title {
+    color: #000000;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.day-description {
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.gallery-item {
+    position: relative;
+    padding-bottom: 75%;
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.gallery-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.operator-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 20px;
+    margin-top: 2rem;
+}
+
+.operator-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.company-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #29a143;
+    margin-bottom: 0.8rem;
+}
+
+.operator-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 992px) {
+    .tour-header {
+        flex-direction: column;
+    }
+
+    .tour-image {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .operator-card {
+        position: static;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .tour-title {
+        font-size: 1.5rem;
+    }
+
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}

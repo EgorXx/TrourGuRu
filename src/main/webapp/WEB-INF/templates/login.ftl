@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="${contextPath}/assets/css/login.css">
 </#macro>
 
-<#macro title>Авторизация</#macro>
+<#macro page_title>Авторизация</#macro>
 
 <#macro content>
     <div class="background-blur"></div>
