@@ -175,6 +175,18 @@ public class TourServiceImpl implements TourService {
             throw new ServiceException("Tour with id " + tourId + " has no images");
         }
 
+        ImageDto mainImage = null;
+        List<ImageDto> otherImages = new ArrayList<>();
+
+        for (ImageTour imageTour : images) {
+            if (imageTour.getMain() & mainImage == null) {
+                mainImage = new ImageDto(imageTour.getImageUrl());
+            } else {
+                otherImages.add(new ImageDto(imageTour.getImageUrl()));
+            }
+        }
+
+
         OperatorViewDto operatorViewDto = operatorService.findById(tourEntity.getOperatorId());
 
         return new TourDetailDto(
@@ -186,10 +198,11 @@ public class TourServiceImpl implements TourService {
                 operatorViewDto.id(),
                 operatorViewDto.companyName(),
                 operatorViewDto.description(),
+                mainImage,
                 сategories,
                 services,
                 programs,
-                images
+                otherImages
         );
 
     }

@@ -16,7 +16,7 @@ public class TourCategoryDaoImpl implements TourCategoryDao {
     private static final String SQL_SAVE = "INSERT INTO tour_category (tour_id, category_id) VALUES (?, ?)";
     private static final String SQl_SELECT_CATEGORIES_BY_TOUR_ID =
             "SELECT category.id, category.title " +
-            "FROM tour_category INNER JOIN category ON tour_category.category_id = category.id" +
+            "FROM tour_category INNER JOIN category ON tour_category.category_id = category.id " +
                     "WHERE tour_category.tour_id=?";
 
 

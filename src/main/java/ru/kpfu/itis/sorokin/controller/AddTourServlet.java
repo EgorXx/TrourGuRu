@@ -53,7 +53,8 @@ public class AddTourServlet extends HttpServlet {
         String duration = req.getParameter("duration");
         String description = req.getParameter("description");
 
-        String[] services = req.getParameterValues("services");
+        String servicesString = req.getParameter("services");
+        String[] services = servicesString.split(",");
 
         String[] category_ids = req.getParameterValues("category_ids");
 
@@ -134,7 +135,7 @@ public class AddTourServlet extends HttpServlet {
 
         try {
             Integer tourId = tourService.createTour(tourCreateDto, imageTourAddDtos, user);
-            resp.sendRedirect(req.getContextPath() + "/main");
+            resp.sendRedirect(req.getContextPath() + "/tours/" + tourId);
         } catch (ValidationException e) {
             req.setAttribute("errors", e.getErrors());
             req.setAttribute("tourTitle", title);

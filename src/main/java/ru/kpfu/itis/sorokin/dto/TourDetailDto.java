@@ -13,9 +13,10 @@ public record TourDetailDto(
         Integer userId,
         String operatorCompanyName,
         String operatorDescription,
+        ImageDto mainImage,
         List<Category> categories,
         List<ServiceTour> services,
         List<ProgramTour> programs,
-        List<ImageTour> images
+        List<ImageDto> otherImages
 ) {}
 
