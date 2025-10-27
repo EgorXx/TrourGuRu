@@ -1,6 +1,7 @@
 package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.TourDao;
+import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Tour;
 import ru.kpfu.itis.sorokin.entity.TourEntity;
@@ -9,11 +10,20 @@ import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class TourDaoImpl implements TourDao {
     private static final String SQL_SAVE = "INSERT INTO tour (title, operator_id, destination, description, duration) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_FIND_BY_ID = "SELECT title, operator_id, destination, description, duration FROM tour WHERE id=?";
+    private static final String SQL_FIND_ALL = """
+            SELECT id, title, destination, duration, company_name, image_url
+            FROM tour INNER JOIN operator ON tour.operator_id = operator.user_id
+            INNER JOIN tour_image ON tour.id = tour_image.tour_id
+            WHERE tour_image.is_main = true
+            LIMIT ? OFFSET ?
+            """;
 
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {
@@ -73,5 +83,35 @@ public class TourDaoImpl implements TourDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public List<CardTourDto> findAll(int limit, int offset) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL)) {
+
+            preparedStatement.setInt(1, limit);
+            preparedStatement.setInt(2, offset);
+
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<CardTourDto> tours = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    tours.add(new CardTourDto(
+                            resultSet.getInt("id"),
+                            resultSet.getString("destination"),
+                            resultSet.getString("title"),
+                            resultSet.getInt("duration"),
+                            resultSet.getString("company_name"),
+                            resultSet.getString("image_url")
+                    ));
+                }
+
+                return tours;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select tours", e);
+        }
     }
 }

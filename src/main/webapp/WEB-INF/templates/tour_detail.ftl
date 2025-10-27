@@ -42,7 +42,13 @@
                                 <#if duration??>
                                     <div class="info-row">
                                         <i class="bi bi-calendar-event"></i>
-                                        <span><strong>Длительность:</strong> ${duration} дней</span>
+                                        <#if duration == 1>
+                                            <span><strong>Длительность:</strong> ${duration} день</span>
+                                        <#elseif (duration >= 2) && (duration <= 4)>
+                                            <span><strong>Длительность:</strong> ${duration} дня</span>
+                                        <#else>
+                                            <span><strong>Длительность:</strong> ${duration} дней</span>
+                                        </#if>
                                     </div>
                                 </#if>
 
