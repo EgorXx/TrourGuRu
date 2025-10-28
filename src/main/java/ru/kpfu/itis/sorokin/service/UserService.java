@@ -10,4 +10,8 @@ public interface UserService {
     void signUp(UserSignUpDto userSignUpDto) throws ValidationException;
 
     Optional<UserSessionDto> login(String email, String password) throws ValidationException;
+
+    void changePassword(Integer userId, String currentPassword, String newPassword) throws ValidationException;
+
+    void updateProfile(Integer id, String userName, String email) throws ValidationException;
 }

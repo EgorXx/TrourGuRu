@@ -81,6 +81,40 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void changePassword(Integer userId, String currentPassword, String newPassword) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        User user = userDao.findById(userId).orElseThrow(
+                () -> new ServiceException("User not found"));
+
+        if (!PasswordUtil.verifyPassword(currentPassword, user.getPasswordHash())) {
+            errors.put("currentPassword", "Неверный текущий пароль");
+            throw new ValidationException(errors);
+        }
+
+        if (newPassword == null || newPassword.isEmpty()) {
+            errors.put("newPassword", "Новый пароль не может быть пустым");
+            throw new ValidationException(errors);
+        }
+
+        if (newPassword.length() < 8) {
+            errors.put("newPassword", "Новый пароль не может быть меньше 8 символов");
+            throw new ValidationException(errors);
+        }
+
+        String newPasswordHash = PasswordUtil.encrypt(newPassword);
+
+        userDao.changePassword(userId, newPasswordHash);
+    }
+
+    @Override
+    public void updateProfile(Integer id, String userName, String email) throws ValidationException {
+        validateUpdateProfile(id, userName, email);
+
+        userDao.updateProfile(id, userName, email);
+    }
+
     private void validateSignUpUser(UserSignUpDto userSignUpDto) throws ValidationException {
         Map<String, String> errors = new HashMap<>();
 
@@ -104,6 +138,31 @@ public class UserServiceImpl implements UserService {
 
         if (!email.matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$")) {
             errors.put("email", "Несоответствующий формат почты");
+        }
+
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+    }
+
+    private void validateUpdateProfile(Integer userId, String userName, String email) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        if (!email.matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$")) {
+            errors.put("email", "Несоответствующий формат почты");
+        } else {
+            Optional<User> userOptional = userDao.findByEmail(email);
+            if (userOptional.isPresent() && !userOptional.get().getId().equals(userId)) {
+                errors.put("email", "Пользователь с таким email уже есть, введите другой");
+            }
+        }
+
+        if (userName == null || userName.isEmpty()) {
+            errors.put("username", "Имя пользователя не может быть пустым");
+        }
+
+        if (userName.length() > 63) {
+            errors.put("username", "Слишком длинное имя пользователя");
         }
 
         if (!errors.isEmpty()) {
