@@ -31,7 +31,7 @@ public class ProfileEditServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
 
         if (session == null) {
             resp.sendRedirect("/login");
@@ -43,6 +43,11 @@ public class ProfileEditServlet extends HttpServlet {
         if (userSessionDto == null) {
             resp.sendRedirect("/login");
             return;
+        }
+
+        String success = req.getParameter("success");
+        if ("true".equals(success)) {
+            req.setAttribute("successMessage", "Профиль успешно обновлен");
         }
 
         OperatorViewDto operatorViewDto;
