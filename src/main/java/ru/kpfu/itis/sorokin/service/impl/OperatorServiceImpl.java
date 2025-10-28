@@ -3,6 +3,7 @@ package ru.kpfu.itis.sorokin.service.impl;
 import ru.kpfu.itis.sorokin.dao.OperatorDao;
 import ru.kpfu.itis.sorokin.dao.UserDao;
 import ru.kpfu.itis.sorokin.dto.OperatorSignUpDto;
+import ru.kpfu.itis.sorokin.dto.OperatorUpdateInfoDto;
 import ru.kpfu.itis.sorokin.dto.OperatorViewDto;
 import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
 import ru.kpfu.itis.sorokin.entity.Operator;
@@ -19,6 +20,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class OperatorServiceImpl  implements OperatorService {
     UserDao userDao;
@@ -92,6 +94,46 @@ public class OperatorServiceImpl  implements OperatorService {
         );
     }
 
+    @Override
+    public void updateProfile(OperatorUpdateInfoDto operatorUpdateInfoDto) throws ValidationException {
+        Integer userId = operatorUpdateInfoDto.userId();
+        String email = operatorUpdateInfoDto.email();
+        String companyName = operatorUpdateInfoDto.companyName();
+        String description = operatorUpdateInfoDto.description();
+
+        validateUpdateProfile(userId, email, companyName, description);
+
+        Connection connection = null;
+
+        try {
+            connection = DataBaseConnectionUtil.getConnection();
+
+            connection.setAutoCommit(false);
+
+            userDao.updateProfile(userId, null, email, connection);
+            operatorDao.updateOperatorInfo(userId, companyName, description, connection);
+
+            connection.commit();
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                }
+            }
+
+            throw new ServiceException("Failed update operator profile", e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    }
+
     private void validateSignUpOperator(UserSignUpDto userSignUpDto, OperatorSignUpDto operatorSignUpDto) throws ValidationException {
         Map<String, String> errors = new HashMap<>();
 
@@ -103,6 +145,35 @@ public class OperatorServiceImpl  implements OperatorService {
 
         if (operatorSignUpDto.companyName().length() > 63) {
             errors.put("operator_name", "Слишком длинное имя компании");
+        }
+
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+    }
+
+    private void validateUpdateProfile(Integer userId, String email, String companyName, String description) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        if (!email.matches("^[\\w-\\.]+@[\\w-]+(\\.[\\w-]+)*\\.[a-z]{2,}$")) {
+            errors.put("email", "Несоответствующий формат почты");
+        } else {
+            Optional<User> userOptional = userDao.findByEmail(email);
+            if (userOptional.isPresent() && !userOptional.get().getId().equals(userId)) {
+                errors.put("email", "Пользователь с таким email уже есть, введите другой");
+            }
+        }
+
+        if (companyName == null || companyName.isEmpty()) {
+            errors.put("companyName", "Название компании не может быть пустым");
+        }
+
+        if (companyName != null && companyName.length() > 63) {
+            errors.put("companyName", "Слишком длинное название компании");
+        }
+
+        if (description != null && description.length() > 1023) {
+            errors.put("description", "Слишком длинное описание компании");
         }
 
         if (!errors.isEmpty()) {
