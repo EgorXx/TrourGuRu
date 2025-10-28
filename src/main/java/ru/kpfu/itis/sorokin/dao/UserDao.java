@@ -12,5 +12,11 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
+    void updateProfile(Integer userId, String userName, String email);
+
+    void updateProfile(Integer userId, String userName, String email, Connection connection);
+
+    void changePassword(Integer userId, String passwordHash);
+
     User findById(Integer id);
 }

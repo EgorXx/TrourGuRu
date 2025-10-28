@@ -11,4 +11,8 @@ public interface OperatorDao {
     Operator save(Operator operator, Connection connection);
 
     Optional<Operator> findByUserId(Integer userId);
+
+    void updateOperatorInfo(Integer userId, String companyName, String description);
+
+    void updateOperatorInfo(Integer userId, String companyName, String description, Connection connection);
 }

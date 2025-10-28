@@ -4,6 +4,7 @@ import ru.kpfu.itis.sorokin.dao.UserDao;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.User;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
+import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
@@ -12,6 +13,17 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
     private static final String SQL_SAVE = "INSERT INTO users (email, name, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
     private static final String SQL_SELECTED_BY_EMAIL = "SELECT id, email, name, password_hash, role FROM users WHERE email = ?";
+    private static final String SQL_UPDATE_PROFILE = """
+            UPDATE users
+            SET name = ?, email = ?
+            WHERE id = ?
+            """;
+
+    private static final String SQL_CHANGE_PASSWORD = """
+            UPDATE users
+            SET password_hash = ?
+            WHERE id = ?
+            """;
 
     @Override
     public User save(User user) {
@@ -79,6 +91,53 @@ public class UserDaoImpl implements UserDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void updateProfile(Integer userId, String userName, String email) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection()) {
+            updateProfile(userId, userName, email, connection);
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update profile user", e);
+        }
+    }
+
+    @Override
+    public void updateProfile(Integer userId, String userName, String email, Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_PROFILE)) {
+
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, email);
+            preparedStatement.setInt(3, userId);
+
+            int updateRow = preparedStatement.executeUpdate();
+
+            if (updateRow == 0) {
+                throw new SQLException();
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update profile user", e);
+        }
+    }
+
+    @Override
+    public void changePassword(Integer userId, String passwordHash) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_CHANGE_PASSWORD)) {
+
+            preparedStatement.setString(1, passwordHash);
+            preparedStatement.setInt(2, userId);
+
+            int updateRow = preparedStatement.executeUpdate();
+
+            if (updateRow == 0) {
+                throw new SQLException();
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed change password user", e);
+        }
     }
 
 

@@ -12,6 +12,11 @@ import java.util.Optional;
 public class OperatorDaoImpl implements OperatorDao {
     private static final String SQL_SAVE = "INSERT INTO operator (user_id, company_name, description, status) VALUES (?, ?, ?, ?::general_status)";
     private static final String SQL_FIND_BY_USER_ID = "SELECT user_id, company_name, description, status FROM operator WHERE user_id = ?";
+    private static final String SQL_UPDATE_INFO = """
+            UPDATE operator
+            SET company_name = ?, description = ?
+            WHERE user_id = ?
+            """;
 
     @Override
     public Operator save(Operator operator) {
@@ -70,5 +75,34 @@ public class OperatorDaoImpl implements OperatorDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void updateOperatorInfo(Integer userId, String companyName, String description) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection()) {
+
+            updateOperatorInfo(userId, companyName, description, connection);
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update profile operator", e);
+        }
+    }
+
+    @Override
+    public void updateOperatorInfo(Integer userId, String companyName, String description, Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_INFO)) {
+
+            preparedStatement.setString(1, companyName);
+            preparedStatement.setString(2, description);
+            preparedStatement.setInt(3, userId);
+
+            int updateRow = preparedStatement.executeUpdate();
+
+            if (updateRow == 0) {
+                throw new SQLException();
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update profile operator", e);
+        }
     }
 }
