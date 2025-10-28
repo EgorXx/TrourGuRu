@@ -2,7 +2,6 @@ package ru.kpfu.itis.sorokin.controller;
 
 import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.dto.TourDetailDto;
-import ru.kpfu.itis.sorokin.entity.Tour;
 import ru.kpfu.itis.sorokin.service.TourService;
 
 import javax.servlet.ServletException;

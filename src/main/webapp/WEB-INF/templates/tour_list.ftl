@@ -92,6 +92,14 @@
     </div>
 </#macro>
 
+<#macro scripts>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        const contextPath = '${contextPath}';
+    </script>
+    <script src="${contextPath}/assets/js/tour_list.js"></script>
+</#macro>
+
 <#macro footer>
     <#include "footer.ftl">
 </#macro>
