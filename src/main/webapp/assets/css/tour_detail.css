@@ -2,7 +2,7 @@ body {
     min-height: 100vh;
 }
 
-page-wrapper {
+.page-wrapper {
     min-height: calc(100vh - 72px - 59px);
 }
 

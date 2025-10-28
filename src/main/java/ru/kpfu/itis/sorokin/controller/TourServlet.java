@@ -1,5 +1,6 @@
 package ru.kpfu.itis.sorokin.controller;
 
+import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.dto.TourDetailDto;
 import ru.kpfu.itis.sorokin.entity.Tour;
 import ru.kpfu.itis.sorokin.service.TourService;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "Tours", urlPatterns = "/tours/*")
 public class TourServlet extends HttpServlet {
@@ -26,13 +28,23 @@ public class TourServlet extends HttpServlet {
         String path = req.getPathInfo();
 
         if (path == null || path.equals("/")) {
-            //showTourList();
+            showTourList(req, resp);
             return;
+        } else {
+            Integer tourId = getIdFromPath(path.substring(1));
+
+            showTourDetail(req, resp, tourId);
         }
+    }
 
-        Integer tourId = getIdFromPath(path.substring(1));
+    private void showTourList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<CardTourDto> tourCards = tourService.getTours(1, 6);
+        Boolean hasMore = tourCards.size() == 6;
 
-        showTourDetail(req, resp, tourId);
+        req.setAttribute("tourCards", tourCards);
+        req.setAttribute("hasMore", hasMore);
+
+        req.getRequestDispatcher("/tour_list.ftl").forward(req, resp);
     }
 
     private void showTourDetail(HttpServletRequest req, HttpServletResponse resp, Integer tourId) throws ServletException, IOException {
@@ -49,9 +61,6 @@ public class TourServlet extends HttpServlet {
         req.setAttribute("programs", tourDetailDto.programs());
         req.setAttribute("mainImage", tourDetailDto.mainImage());
         req.setAttribute("otherImages", tourDetailDto.otherImages());
-
-        System.out.println(tourDetailDto.operatorCompanyName());
-        System.out.println(tourDetailDto.operatorDescription());
 
         req.getRequestDispatcher("/tour_detail.ftl").forward(req, resp);
     }

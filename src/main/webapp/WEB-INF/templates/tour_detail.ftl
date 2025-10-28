@@ -2,8 +2,6 @@
 
 <#macro page_title>Информация о туре</#macro>
 
-<#assign useStickyFooter = true>
-
 <#macro page_styles>
     <link rel="stylesheet" href="${contextPath}/assets/css/tour_detail.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">

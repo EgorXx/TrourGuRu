@@ -15,7 +15,7 @@
         <section class="hero">
             <div class="container">
                 <h1>Открывайте Россию по новому</h1>
-                <a href="${contextPath}/main" class="btn btn-hero">Выбрать тур</a>
+                <a href="${contextPath}/tours" class="btn btn-hero">Выбрать тур</a>
             </div>
         </section>
 

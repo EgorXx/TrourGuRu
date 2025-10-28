@@ -18,7 +18,7 @@ public class TourDaoImpl implements TourDao {
     private static final String SQL_SAVE = "INSERT INTO tour (title, operator_id, destination, description, duration) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_FIND_BY_ID = "SELECT title, operator_id, destination, description, duration FROM tour WHERE id=?";
     private static final String SQL_FIND_ALL = """
-            SELECT id, title, destination, duration, company_name, image_url
+            SELECT tour.id, title, destination, duration, company_name, image_url
             FROM tour INNER JOIN operator ON tour.operator_id = operator.user_id
             INNER JOIN tour_image ON tour.id = tour_image.tour_id
             WHERE tour_image.is_main = true
@@ -100,8 +100,8 @@ public class TourDaoImpl implements TourDao {
                 while (resultSet.next()) {
                     tours.add(new CardTourDto(
                             resultSet.getInt("id"),
-                            resultSet.getString("destination"),
                             resultSet.getString("title"),
+                            resultSet.getString("destination"),
                             resultSet.getInt("duration"),
                             resultSet.getString("company_name"),
                             resultSet.getString("image_url")
