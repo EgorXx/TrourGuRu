@@ -18,5 +18,5 @@ public interface UserDao {
 
     void changePassword(Integer userId, String passwordHash);
 
-    User findById(Integer id);
+    Optional<User> findById(Integer id);
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
     private static final String SQL_SAVE = "INSERT INTO users (email, name, password_hash, role) VALUES (?, ?, ?, ?::user_role)";
     private static final String SQL_SELECTED_BY_EMAIL = "SELECT id, email, name, password_hash, role FROM users WHERE email = ?";
+    private static final String SQL_SELECTED_BY_ID = "SELECT id, email, name, password_hash, role FROM users WHERE id = ?";
     private static final String SQL_UPDATE_PROFILE = """
             UPDATE users
             SET name = ?, email = ?
@@ -142,7 +143,30 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public User findById(Integer id) {
-        return null;
+    public Optional<User> findById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECTED_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(
+                            new User(
+                                    resultSet.getInt("id"),
+                                    resultSet.getString("email"),
+                                    resultSet.getString("name"),
+                                    resultSet.getString("password_hash"),
+                                    Role.valueOf(resultSet.getString("role"))
+                            )
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select user by id", e);
+        }
+
+        return Optional.empty();
     }
 }
