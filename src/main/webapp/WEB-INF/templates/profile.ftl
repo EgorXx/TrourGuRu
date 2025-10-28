@@ -24,7 +24,7 @@
         </div>
 
         <div class="profile-actions">
-            <a href="#" class="btn btn-profile-action">
+            <a href="${contextPath}/profile/edit" class="btn btn-profile-action">
                 <span class="icon-circle"><i class="bi bi-pencil-fill"></i></span>
                 Редактировать профиль
             </a>

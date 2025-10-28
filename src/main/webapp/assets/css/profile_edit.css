@@ -1,0 +1,122 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+    padding-bottom: 50px;
+    overflow-y: auto;
+}
+
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+            linear-gradient(90deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            linear-gradient(270deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            url('../image/background_main_page.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px);
+}
+
+.profile-card {
+    max-width: 500px;
+    width: 100%;
+    background-color: white;
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: auto;
+}
+
+.profile-card h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #29a143;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-save {
+    width: 100%;
+    background-color: #29a143;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-save:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.3);
+}
+
+.password-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.collapsible-section {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s;
+}
+
+.collapsible-section:hover {
+    background-color: #e9ecef;
+}
+
+.collapsible-content {
+    display: none;
+    margin-top: 1rem;
+}
+
+.collapsible-content.active {
+    display: block;
+}
