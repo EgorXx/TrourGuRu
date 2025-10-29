@@ -13,6 +13,12 @@ public class ApplicationTour {
         this.status = status;
     }
 
+    public ApplicationTour(Integer userId, Integer tourId, Status status) {
+        this.userId = userId;
+        this.tourId = tourId;
+        this.status = status;
+    }
+
     public ApplicationTour() {}
 
     public Integer getId() {
