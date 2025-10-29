@@ -1,3 +1,5 @@
 package ru.kpfu.itis.sorokin.dto;
 
-public record AddApplicationTourDto(Integer userId, Integer tourId) {}
+import ru.kpfu.itis.sorokin.entity.Role;
+
+public record AddApplicationTourDto(Integer userId, Integer tourId, Role role) {}
