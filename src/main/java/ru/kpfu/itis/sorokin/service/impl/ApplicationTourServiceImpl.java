@@ -56,7 +56,7 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
             if (status == Status.PENDING) {
                 errors.put("status", "Заявка в обработке");
             } else if (status == Status.APPROVED) {
-                errors.put("status", "Заявка уже принита");
+                errors.put("status", "Заявка уже принята");
             }
 
             throw new ValidationException(errors);
