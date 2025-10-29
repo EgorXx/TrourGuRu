@@ -5,6 +5,7 @@ import ru.kpfu.itis.sorokin.dao.TourDao;
 import ru.kpfu.itis.sorokin.dao.TourServiceDao;
 import ru.kpfu.itis.sorokin.dto.AddApplicationTourDto;
 import ru.kpfu.itis.sorokin.entity.ApplicationTour;
+import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Status;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.exception.DuplicateApplicationException;
@@ -30,6 +31,11 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
         Integer tourId = applicationTourDto.tourId();
 
         Map<String, String> errors = new HashMap<>();
+
+        if (applicationTourDto.role() == Role.OPERATOR) {
+            errors.put("role", "Туроператор не может оставить заявку на тур");
+            throw new ValidationException(errors);
+        }
 
         if (!tourDao.findById(tourId).isPresent()) {
             errors.put("tour", "Тур не найден");
