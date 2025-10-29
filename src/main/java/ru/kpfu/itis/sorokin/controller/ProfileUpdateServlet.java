@@ -59,24 +59,24 @@ public class ProfileUpdateServlet extends HttpServlet {
             errors = validateUserInfo(userName, email);
 
             if (!errors.isEmpty()) {
-                req.setAttribute("errors", errors);
-                req.setAttribute("user", userSessionDto);
-                req.getRequestDispatcher("/profile_edit.ftl").forward(req, resp);
+                session.setAttribute("errors", errors);
+                resp.sendRedirect(req.getContextPath() + "/profile/edit");
                 return;
             }
 
             try {
                 userService.updateProfile(userId, userName, email);
-            } catch (ValidationException e) {
-                req.setAttribute("errors", e.getErrors());
-                req.setAttribute("user", userSessionDto);
-                req.getRequestDispatcher("/profile_edit.ftl").forward(req, resp);
-                return;
-            }
 
-            UserSessionDto newUserSessionDto = new UserSessionDto(userId, userName, email, Role.USER);
-            session.setAttribute("user", newUserSessionDto);
-            resp.sendRedirect(req.getContextPath() + "/profile/edit?success=true");
+                UserSessionDto newUserSessionDto = new UserSessionDto(userId, userName, email, Role.USER);
+                session.setAttribute("user", newUserSessionDto);
+
+                session.setAttribute("success", "Профиль успешно обновлен");
+                resp.sendRedirect(req.getContextPath() + "/profile/edit");
+
+            } catch (ValidationException e) {
+                session.setAttribute("errors", e.getErrors());
+                resp.sendRedirect(req.getContextPath() + "/profile/edit");
+            }
 
         } else if (userSessionDto.isOperator()) {
             Integer userId = userSessionDto.id();
@@ -86,11 +86,8 @@ public class ProfileUpdateServlet extends HttpServlet {
             errors = validateOperatorInfo(companyName, email);
 
             if (!errors.isEmpty()) {
-                req.setAttribute("errors", errors);
-                req.setAttribute("user", userSessionDto);
-                OperatorViewDto operatorViewDto = operatorService.findById(userSessionDto.id());
-                req.setAttribute("operator", operatorViewDto);
-                req.getRequestDispatcher("/profile_edit.ftl").forward(req, resp);
+                session.setAttribute("errors", errors);
+                resp.sendRedirect(req.getContextPath() + "/profile/edit");
                 return;
             }
 
@@ -102,18 +99,18 @@ public class ProfileUpdateServlet extends HttpServlet {
 
             try {
                 operatorService.updateProfile(operatorUpdateInfoDto);
-            } catch (ValidationException e) {
-                req.setAttribute("errors", e.getErrors());
-                req.setAttribute("user", userSessionDto);
-                OperatorViewDto operatorViewDto = operatorService.findById(userSessionDto.id());
-                req.setAttribute("operator", operatorViewDto);
-                req.getRequestDispatcher("/profile_edit.ftl").forward(req, resp);
-                return;
-            }
 
-            UserSessionDto newUserSessionDto = new UserSessionDto(userId, companyName, email, Role.OPERATOR);
-            session.setAttribute("user", newUserSessionDto);
-            resp.sendRedirect(req.getContextPath() + "/profile/edit?success=true");
+                UserSessionDto newUserSessionDto = new UserSessionDto(userId, companyName, email, Role.OPERATOR);
+                session.setAttribute("user", newUserSessionDto);
+
+                session.setAttribute("success", "Профиль успешно обновлен");
+                resp.sendRedirect(req.getContextPath() + "/profile/edit");
+
+            } catch (ValidationException e) {
+                session.setAttribute("errors", e.getErrors());
+                resp.sendRedirect(req.getContextPath() + "/profile/edit");
+
+            }
         }
     }
 

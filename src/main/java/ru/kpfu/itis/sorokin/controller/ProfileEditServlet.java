@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet(name = "ProfileEdit", urlPatterns = "/profile/edit")
 public class ProfileEditServlet extends HttpServlet {
@@ -45,9 +46,18 @@ public class ProfileEditServlet extends HttpServlet {
             return;
         }
 
-        String success = req.getParameter("success");
-        if ("true".equals(success)) {
-            req.setAttribute("successMessage", "Профиль успешно обновлен");
+        Map<String, String> errors = (Map<String, String>) session.getAttribute("errors");
+
+        if (errors != null) {
+            req.setAttribute("errors", errors);
+            session.removeAttribute("errors");
+        }
+
+        String successMessage = (String) session.getAttribute("success");
+
+        if (successMessage != null) {
+            req.setAttribute("successMessage", successMessage);
+            session.removeAttribute("success");
         }
 
         OperatorViewDto operatorViewDto;

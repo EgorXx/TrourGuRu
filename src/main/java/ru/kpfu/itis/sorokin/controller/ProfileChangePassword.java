@@ -50,24 +50,26 @@ public class ProfileChangePassword extends HttpServlet {
         String newPasswrod = req.getParameter("newPassword");
         String confirmPassword = req.getParameter("confirmPassword");
 
-        Map<String, String> errors = new HashMap<>();
+        Map<String, String> errors;
 
         errors = validateChangePassword(currentPassword, newPasswrod, confirmPassword);
 
         if (!errors.isEmpty()) {
-            req.setAttribute("errors", errors);
-            req.getRequestDispatcher("/profile_edit.ftl").forward(req, resp);
+            session.setAttribute("errors", errors);
+            resp.sendRedirect(req.getContextPath() + "/profile/edit");
             return;
         }
 
         try {
             userService.changePassword(userSessionDto.id(), currentPassword, newPasswrod);
 
-            resp.sendRedirect(req.getContextPath() + "/profile/edit?success=true");
+            session.setAttribute("success", "Пароль успешно изменен");
+
+            resp.sendRedirect(req.getContextPath() + "/profile/edit");
 
         } catch (ValidationException e) {
-            req.setAttribute("errors", e.getErrors());
-            req.getRequestDispatcher("/profile_edit.ftl").forward(req, resp);
+            session.setAttribute("errors", e.getErrors());
+            resp.sendRedirect(req.getContextPath() + "/profile/edit");
         }
 
     }
