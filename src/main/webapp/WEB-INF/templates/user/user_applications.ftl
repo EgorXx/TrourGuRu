@@ -21,7 +21,7 @@
 
                 <#if userApplications??>
                     <#list userApplications as userApplication>
-                        <div class="application-card">
+                        <div id="application-${userApplication.id()}" class="application-card">
                             <div class="application-card-body">
                                 <img src="${userApplication.cardTour().mainImageUrl()}"
                                      alt="${userApplication.cardTour().title()}"
@@ -62,7 +62,7 @@
                                 <div class="application-actions">
                                     <a href="${contextPath}//tours/${userApplication.cardTour().id()}" class="btn btn-details">Подробнее</a>
                                     <#if userApplication.status() == 'PENDING'>
-                                        <button class="btn btn-cancel" onclick="cancelApplication(1)">
+                                        <button id="cancel-btn-${userApplication.id()}" class="btn btn-cancel" onclick="cancelApplication(${userApplication.id()})">
                                             Отозвать
                                         </button>
                                     </#if>
@@ -74,6 +74,14 @@
             </div>
         </div>
     </div>
+</#macro>
+
+<#macro scripts>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        const contextPath = '${contextPath}';
+    </script>
+    <script src="${contextPath}/assets/js/user_applications.js"></script>
 </#macro>
 
 <#macro footer>

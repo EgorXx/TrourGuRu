@@ -97,7 +97,7 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
         }
 
         if (applicationTour.getStatus() != Status.PENDING) {
-            errors.put("status", "Можно удалять только заявки со статусом \"В обработке\"");
+            errors.put("status", "Можно удалять только заявки со статусом \"На рассмотрении\"");
             throw new ValidationException(errors);
         }
 
