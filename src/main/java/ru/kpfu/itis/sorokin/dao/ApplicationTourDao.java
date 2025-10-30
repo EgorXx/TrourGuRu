@@ -13,4 +13,8 @@ public interface ApplicationTourDao {
     Optional<ApplicationTour> findByUserIdAndTourId(Integer userId, Integer tourId);
 
     List<UserApplicationTourDto> findAllByUserId(Integer userId);
+
+    void deleteById(Integer id);
+
+    Optional<ApplicationTour> findById(Integer id);
 }

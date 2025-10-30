@@ -31,6 +31,14 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
             WHERE tour_image.is_main = true AND application_tour.user_id = ? AND application_tour.status IN ('PENDING', 'APPROVED')
             """;
 
+    private static final String DELETE_BY_ID = """
+            DELETE FROM application_tour WHERE id = ?
+            """;
+
+    private static final String SQL_FIND_BY_ID = """
+            SELECT id, tour_id, user_id, status FROM application_tour WHERE id = ?
+            """;
+
 
     @Override
     public void save(ApplicationTour applicationTour) {
@@ -120,5 +128,46 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
         } catch (SQLException e) {
             throw new DataAccessException("Failed select applications", e);
         }
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete application_tour by id", e);
+        }
+    }
+
+    @Override
+    public Optional<ApplicationTour> findById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(
+                            new ApplicationTour(
+                                    id,
+                                    resultSet.getInt("user_id"),
+                                    resultSet.getInt("tour_id"),
+                                    Status.valueOf(resultSet.getString("status"))
+                            )
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select ApplicationTour by id", e);
+        }
+
+        return Optional.empty();
     }
 }
