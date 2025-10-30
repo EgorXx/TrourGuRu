@@ -2,6 +2,7 @@ package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.ApplicationTourDao;
 import ru.kpfu.itis.sorokin.dto.CardTourDto;
+import ru.kpfu.itis.sorokin.dto.OperatorApplicationTourDto;
 import ru.kpfu.itis.sorokin.dto.UserApplicationTourDto;
 import ru.kpfu.itis.sorokin.entity.ApplicationTour;
 import ru.kpfu.itis.sorokin.entity.Status;
@@ -29,6 +30,13 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
             INNER JOIN operator ON tour.operator_id = operator.user_id
             INNER JOIN tour_image ON tour.id = tour_image.tour_id
             WHERE tour_image.is_main = true AND application_tour.user_id = ? AND application_tour.status IN ('PENDING', 'APPROVED')
+            """;
+
+    private static final String SQL_FIND_ALL_WITH_TOURINFO_BY_OPERATORID = """
+            SELECT application_tour.id, application_tour.status, users.name, users.email, tour.title, tour.destination, tour.duration
+            FROM application_tour INNER JOIN users ON application_tour.user_id = users.id
+            INNER JOIN tour ON application_tour.tour_id = tour.id
+            WHERE tour.operator_id = ?
             """;
 
     private static final String DELETE_BY_ID = """
@@ -121,6 +129,37 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
                     );
 
                     applications.add(userApplicationTourDto);
+                }
+
+                return applications;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select applications", e);
+        }
+    }
+
+    @Override
+    public List<OperatorApplicationTourDto> findAllByOperatorId(Integer operatorId) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_WITH_TOURINFO_BY_OPERATORID)) {
+
+            preparedStatement.setInt(1, operatorId);
+
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<OperatorApplicationTourDto> applications = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    applications.add(new OperatorApplicationTourDto(
+                            resultSet.getInt("id"),
+                            Status.valueOf(resultSet.getString("status")),
+                            resultSet.getString("email"),
+                            resultSet.getString("name"),
+                            resultSet.getString("title"),
+                            resultSet.getString("destination"),
+                            resultSet.getInt("duration")
+                    ));
+
                 }
 
                 return applications;
