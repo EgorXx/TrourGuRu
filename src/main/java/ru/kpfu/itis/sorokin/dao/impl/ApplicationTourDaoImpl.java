@@ -36,7 +36,7 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
             SELECT application_tour.id, application_tour.status, users.name, users.email, tour.title, tour.destination, tour.duration
             FROM application_tour INNER JOIN users ON application_tour.user_id = users.id
             INNER JOIN tour ON application_tour.tour_id = tour.id
-            WHERE tour.operator_id = ?
+            WHERE tour.operator_id = ? AND application_tour.status IN ('PENDING', 'APPROVED')
             """;
 
     private static final String DELETE_BY_ID = """

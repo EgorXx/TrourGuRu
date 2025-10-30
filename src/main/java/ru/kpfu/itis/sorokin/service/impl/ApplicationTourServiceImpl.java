@@ -110,7 +110,7 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
     }
 
     @Override
-    public List<OperatorApplicationTourDto> getApplicationsByOperatorId(Integer operatorId) {
+    public List<OperatorApplicationTourDto> getActiveApplicationByOperatorId(Integer operatorId) {
         try {
             return applicationTourDao.findAllByOperatorId(operatorId);
         } catch (DataAccessException e) {
