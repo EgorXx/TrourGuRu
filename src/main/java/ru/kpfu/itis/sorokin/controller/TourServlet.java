@@ -60,6 +60,7 @@ public class TourServlet extends HttpServlet {
         req.setAttribute("programs", tourDetailDto.programs());
         req.setAttribute("mainImage", tourDetailDto.mainImage());
         req.setAttribute("otherImages", tourDetailDto.otherImages());
+        req.setAttribute("tourId", tourId);
 
         req.getRequestDispatcher("/tour_detail.ftl").forward(req, resp);
     }

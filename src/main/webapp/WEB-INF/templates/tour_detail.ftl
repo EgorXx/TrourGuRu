@@ -124,11 +124,30 @@
                                 ${operatorDescription}
                             </p>
                         </#if>
+
+                        <div id="application-message" class="application-message"></div>
+
+                        <#if user?? && user.isUser()>
+                            <button id="apply-btn"
+                                    class="btn-apply"
+                                    data-tour-id="${tourId}">
+                                <i class="bi bi-check-circle"></i>
+                                Оставить заявку
+                            </button>
+                        </#if>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</#macro>
+
+<#macro scripts>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        const contextPath = '${contextPath}';
+    </script>
+    <script src="${contextPath}/assets/js/tour_detail.js"></script>
 </#macro>
 
 <#macro footer>

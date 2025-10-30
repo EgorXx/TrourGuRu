@@ -1,6 +1,7 @@
 package ru.kpfu.itis.sorokin.listener;
 
 import com.cloudinary.Cloudinary;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.kpfu.itis.sorokin.dao.*;
 import ru.kpfu.itis.sorokin.dao.impl.*;
 import ru.kpfu.itis.sorokin.service.*;
@@ -12,7 +13,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
 
 @WebListener
 public class InitListener implements ServletContextListener {
@@ -38,16 +39,22 @@ public class InitListener implements ServletContextListener {
             TourImageDao tourImageDao = new TourImageDaoImpl();
             TourProgramDao tourProgramDao = new TourProgramDaoImpl();
             TourServiceDao tourServiceDao = new TourServiceDaoImpl();
+            ApplicationTourDao applicationTourDao = new ApplicationTourDaoImpl();
 
             UserService userService = new UserServiceImpl(userDao, operatorDao);
             OperatorService operatorService = new OperatorServiceImpl(userDao, operatorDao);
             CategoryService categoryService = new CategoryServiceImpl(categoryDao);
             TourService tourService = new TourServiceImpl(tourDao, tourProgramDao, tourServiceDao, tourCategoryDao, imageUploadService, tourImageDao, operatorService);
+            ApplicationTourService applicationTourService = new ApplicationTourServiceImpl(applicationTourDao, tourDao);
+
+            ObjectMapper objectMapper = new ObjectMapper();
 
             sce.getServletContext().setAttribute("userService", userService);
             sce.getServletContext().setAttribute("operatorService", operatorService);
             sce.getServletContext().setAttribute("categoryService", new CategoryServiceImpl(categoryDao));
             sce.getServletContext().setAttribute("tourService", tourService);
+            sce.getServletContext().setAttribute("applicationTourService", applicationTourService);
+            sce.getServletContext().setAttribute("objectMapper", objectMapper);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
