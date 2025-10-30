@@ -1,24 +1,35 @@
 package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.ApplicationTourDao;
+import ru.kpfu.itis.sorokin.dto.CardTourDto;
+import ru.kpfu.itis.sorokin.dto.UserApplicationTourDto;
 import ru.kpfu.itis.sorokin.entity.ApplicationTour;
-import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Status;
-import ru.kpfu.itis.sorokin.entity.TourEntity;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.exception.DuplicateApplicationException;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ApplicationTourDaoImpl implements ApplicationTourDao {
     private static final String SQL_SAVE = "INSERT INTO application_tour (tour_id, user_id, status) VALUES (?, ?, ?::general_status)";
+
     private static final String SQL_FIND_BY_USERID_TOURID = """
         SELECT id, user_id, tour_id, status 
         FROM application_tour 
         WHERE user_id = ? AND tour_id = ? AND status IN ('PENDING', 'APPROVED')
         LIMIT 1""";
+
+    private static final String SQL_FIND_ALL_WITH_CARDTOUR_BY_USERID = """
+            SELECT application_tour.id, application_tour.user_id, application_tour.status, tour.id as tour_id, title, destination, duration, company_name, image_url
+            FROM application_tour INNER JOIN tour ON application_tour.tour_id = tour.id
+            INNER JOIN operator ON tour.operator_id = operator.user_id
+            INNER JOIN tour_image ON tour.id = tour_image.tour_id
+            WHERE tour_image.is_main = true AND application_tour.user_id = ? AND application_tour.status IN ('PENDING', 'APPROVED')
+            """;
 
 
     @Override
@@ -71,5 +82,43 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public List<UserApplicationTourDto> findAllByUserId(Integer userId) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_WITH_CARDTOUR_BY_USERID)) {
+
+            preparedStatement.setInt(1, userId);
+
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<UserApplicationTourDto> applications = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    CardTourDto cardTourDto = new CardTourDto(
+                            resultSet.getInt("tour_id"),
+                            resultSet.getString("title"),
+                            resultSet.getString("destination"),
+                            resultSet.getInt("duration"),
+                            resultSet.getString("company_name"),
+                            resultSet.getString("image_url")
+                    );
+
+                    UserApplicationTourDto userApplicationTourDto = new UserApplicationTourDto(
+                            resultSet.getInt("id"),
+                            resultSet.getInt("user_id"),
+                            Status.valueOf(resultSet.getString("status")),
+                            cardTourDto
+                    );
+
+                    applications.add(userApplicationTourDto);
+                }
+
+                return applications;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select applications", e);
+        }
     }
 }
