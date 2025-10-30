@@ -17,6 +17,7 @@ import ru.kpfu.itis.sorokin.service.ApplicationTourService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ApplicationTourServiceImpl implements ApplicationTourService {
     private ApplicationTourDao applicationTourDao;
@@ -74,6 +75,36 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
             return applicationTourDao.findAllByUserId(userId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed get active applications", e);
+        }
+    }
+
+    @Override
+    public void cancelApplication(Integer userId, Integer applicationId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<ApplicationTour> applicationTourOptional = applicationTourDao.findById(applicationId);
+
+        if (!applicationTourOptional.isPresent()) {
+            errors.put("application", "Заявка не найдена");
+            throw new ValidationException(errors);
+        }
+
+        ApplicationTour applicationTour = applicationTourOptional.get();
+
+        if (!applicationTour.getUserId().equals(userId)) {
+            errors.put("root", "У вас недостаточно прав, для удаления этой заявки");
+            throw new ValidationException(errors);
+        }
+
+        if (applicationTour.getStatus() != Status.PENDING) {
+            errors.put("status", "Можно удалять только заявки со статусом \"В обработке\"");
+            throw new ValidationException(errors);
+        }
+
+        try {
+            applicationTourDao.deleteById(applicationId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed cancel application", e);
         }
     }
 }

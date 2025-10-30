@@ -10,4 +10,6 @@ public interface ApplicationTourService {
     void add(AddApplicationTourDto applicationTourDto) throws ValidationException;
 
     List<UserApplicationTourDto> getActiveApplicationByUserId(Integer userId);
+
+    void cancelApplication(Integer userId, Integer applicationId) throws ValidationException;
 }
