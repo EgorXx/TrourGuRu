@@ -35,7 +35,7 @@
             </a>
 
             <#if user.isUser()>
-                <a href="#" class="btn btn-profile-action">
+                <a href="${contextPath}/user/applications" class="btn btn-profile-action">
                     <span class="icon-circle"><i class="bi bi-calendar-check-fill"></i></span>
                     Мои заявки
                 </a>
