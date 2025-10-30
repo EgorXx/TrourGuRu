@@ -4,6 +4,7 @@ import ru.kpfu.itis.sorokin.dao.ApplicationTourDao;
 import ru.kpfu.itis.sorokin.dao.TourDao;
 import ru.kpfu.itis.sorokin.dao.TourServiceDao;
 import ru.kpfu.itis.sorokin.dto.AddApplicationTourDto;
+import ru.kpfu.itis.sorokin.dto.UserApplicationTourDto;
 import ru.kpfu.itis.sorokin.entity.ApplicationTour;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Status;
@@ -14,6 +15,7 @@ import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.ApplicationTourService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ApplicationTourServiceImpl implements ApplicationTourService {
@@ -63,6 +65,15 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
 
         } catch (DataAccessException e) {
             throw new ServiceException("Failed add application tour");
+        }
+    }
+
+    @Override
+    public List<UserApplicationTourDto> getActiveApplicationByUserId(Integer userId) {
+        try {
+            return applicationTourDao.findAllByUserId(userId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get active applications", e);
         }
     }
 }
