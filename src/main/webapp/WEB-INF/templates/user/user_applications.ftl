@@ -1,6 +1,6 @@
 <#include "../base.ftl">
 
-<#macro page_title>Личный кабинет</#macro>
+<#macro page_title>Мои заявки</#macro>
 
 <#macro page_styles>
     <link rel="stylesheet" href="${contextPath}/assets/css/user_applications.css">
@@ -19,7 +19,7 @@
             <div class="applications-content-wrapper">
                 <h2 class="page-title">Мои заявки</h2>
 
-                <#if userApplications??>
+                <#if userApplications?? && (userApplications?size > 0)>
                     <#list userApplications as userApplication>
                         <div id="application-${userApplication.id()}" class="application-card">
                             <div class="application-card-body">
@@ -70,6 +70,12 @@
                             </div>
                         </div>
                     </#list>
+
+                <#else>
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Заявок пока нет</p>
+                    </div>
                 </#if>
             </div>
         </div>
@@ -81,7 +87,6 @@
     <script>
         const contextPath = '${contextPath}';
     </script>
-    <script src="${contextPath}/assets/js/user_applications.js"></script>
 </#macro>
 
 <#macro footer>

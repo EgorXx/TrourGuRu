@@ -62,7 +62,7 @@
                     Добавить тур
                 </a>
 
-                <a href="#" class="btn btn-profile-action">
+                <a href="${contextPath}/operator/applications" class="btn btn-profile-action">
                     <span class="icon-circle"><i class="bi bi-clipboard-check"></i></span>
                     Заявки
                 </a>
