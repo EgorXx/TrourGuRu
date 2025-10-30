@@ -4,6 +4,7 @@ import ru.kpfu.itis.sorokin.dao.ApplicationTourDao;
 import ru.kpfu.itis.sorokin.dao.TourDao;
 import ru.kpfu.itis.sorokin.dao.TourServiceDao;
 import ru.kpfu.itis.sorokin.dto.AddApplicationTourDto;
+import ru.kpfu.itis.sorokin.dto.OperatorApplicationTourDto;
 import ru.kpfu.itis.sorokin.dto.UserApplicationTourDto;
 import ru.kpfu.itis.sorokin.entity.ApplicationTour;
 import ru.kpfu.itis.sorokin.entity.Role;
@@ -105,6 +106,15 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
             applicationTourDao.deleteById(applicationId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed cancel application", e);
+        }
+    }
+
+    @Override
+    public List<OperatorApplicationTourDto> getApplicationsByOperatorId(Integer operatorId) {
+        try {
+            return applicationTourDao.findAllByOperatorId(operatorId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get applications for operator", e);
         }
     }
 }

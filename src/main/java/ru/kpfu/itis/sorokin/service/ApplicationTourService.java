@@ -1,6 +1,7 @@
 package ru.kpfu.itis.sorokin.service;
 
 import ru.kpfu.itis.sorokin.dto.AddApplicationTourDto;
+import ru.kpfu.itis.sorokin.dto.OperatorApplicationTourDto;
 import ru.kpfu.itis.sorokin.dto.UserApplicationTourDto;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 
@@ -12,4 +13,6 @@ public interface ApplicationTourService {
     List<UserApplicationTourDto> getActiveApplicationByUserId(Integer userId);
 
     void cancelApplication(Integer userId, Integer applicationId) throws ValidationException;
+
+    List<OperatorApplicationTourDto> getApplicationsByOperatorId(Integer operatorId);
 }
