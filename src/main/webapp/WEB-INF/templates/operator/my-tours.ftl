@@ -23,7 +23,7 @@
                     <#if tourCards?? && tourCards?has_content>
                         <#list tourCards as tourCard>
                             <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="tour-card">
+                                <div id="tour-card-${tourCard.id()}" class="tour-card">
                                     <img src="${tourCard.mainImageUrl()}" alt="${tourCard.title()}" class="tour-image">
 
                                     <div class="tour-content">
@@ -76,6 +76,11 @@
 </#macro>
 
 <#macro scripts>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        const contextPath = '${contextPath}';
+    </script>
+    <script src="${contextPath}/assets/js/my-tours.js"></script>
 </#macro>
 
 <#macro footer>

@@ -197,7 +197,7 @@ public class TourDaoImpl implements TourDao {
 
             preparedStatement.setInt(1, id);
 
-            preparedStatement.executeQuery();
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Failed delete by id", e);
         }
