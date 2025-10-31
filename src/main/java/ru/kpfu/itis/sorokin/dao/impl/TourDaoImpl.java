@@ -33,6 +33,13 @@ public class TourDaoImpl implements TourDao {
             WHERE application_tour.id = ?
             """;
 
+    private static final String SQL_FIND_ALL_BY_OPERATOR_ID = """
+            SELECT tour.id, title, destination, duration, company_name, image_url
+            FROM tour INNER JOIN operator ON tour.operator_id = operator.user_id
+            INNER JOIN tour_image ON tour.id = tour_image.tour_id
+            WHERE tour_image.is_main = true AND operator.user_id = ?
+            """;
+
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS)) {
@@ -120,6 +127,35 @@ public class TourDaoImpl implements TourDao {
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed select tours", e);
+        }
+    }
+
+    @Override
+    public List<CardTourDto> findAllByOperatorId(Integer operatorId) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_BY_OPERATOR_ID)) {
+
+            preparedStatement.setInt(1, operatorId);
+
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<CardTourDto> tours = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    tours.add(new CardTourDto(
+                            resultSet.getInt("id"),
+                            resultSet.getString("title"),
+                            resultSet.getString("destination"),
+                            resultSet.getInt("duration"),
+                            resultSet.getString("company_name"),
+                            resultSet.getString("image_url")
+                    ));
+                }
+
+                return tours;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select tours by operator id", e);
         }
     }
 

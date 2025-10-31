@@ -8,8 +8,6 @@ import ru.kpfu.itis.sorokin.dto.UserSessionDto;
 import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.ApplicationTourService;
-import ru.kpfu.itis.sorokin.service.CategoryService;
-import ru.kpfu.itis.sorokin.service.TourService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

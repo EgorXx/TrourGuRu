@@ -14,5 +14,7 @@ public interface TourDao {
 
     List<CardTourDto> findAll(int limit, int offset);
 
+    List<CardTourDto> findAllByOperatorId(Integer operatorId);
+
     Optional<TourEntity> findByApplicationId(Integer applicationId);
 }
