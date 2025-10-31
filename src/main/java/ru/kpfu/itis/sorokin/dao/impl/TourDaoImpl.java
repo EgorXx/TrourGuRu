@@ -28,9 +28,9 @@ public class TourDaoImpl implements TourDao {
             """;
 
     private static final String SQL_FIND_BY_APPLICATION_ID = """
-            SELECT title, operator_id, destination, description, duration 
+            SELECT tour.id, title, operator_id, destination, description, duration 
             FROM tour INNER JOIN application_tour ON tour.id = application_tour.tour_id
-            WHERE application_tour = ?
+            WHERE application_tour.id = ?
             """;
 
     @Override

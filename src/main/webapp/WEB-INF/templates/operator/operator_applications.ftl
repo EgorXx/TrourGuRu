@@ -21,7 +21,7 @@
 
                 <#if operatorApplications?? && (operatorApplications?size > 0)>
                     <#list operatorApplications as operatorApplication>
-                        <div class="application-card">
+                        <div id="application-${operatorApplication.applicationId()}" class="application-card">
                             <div class="application-card-body">
                                 <div class="application-info">
                                     <#if operatorApplication.status() == 'PENDING'>
@@ -60,7 +60,7 @@
                                         <button class="btn-application btn-application-approve" onclick="approveApplication(123)">
                                             Одобрить
                                         </button>
-                                        <button class="btn-application btn-application-reject" onclick="rejectApplication(123)">
+                                        <button id="reject-btn-${operatorApplication.applicationId()}" class="btn-application btn-application-reject" onclick="rejectApplication(${operatorApplication.applicationId()})">
                                             Отклонить
                                         </button>
                                     </#if>
@@ -85,7 +85,7 @@
     <script>
         const contextPath = '${contextPath}';
     </script>
-    <script src="${contextPath}/assets/js/user_applications.js"></script>
+    <script src="${contextPath}/assets/js/operator_applications.js"></script>
 </#macro>
 
 <#macro footer>
