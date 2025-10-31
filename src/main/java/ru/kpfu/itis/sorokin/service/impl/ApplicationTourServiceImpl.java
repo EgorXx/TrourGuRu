@@ -169,7 +169,7 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
         }
 
         try {
-            applicationTourDao.updateStatusById(operatorId, Status.APPROVED);
+            applicationTourDao.updateStatusById(applicationId, Status.APPROVED);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed approved application", e);
         }

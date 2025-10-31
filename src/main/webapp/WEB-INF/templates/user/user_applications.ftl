@@ -87,6 +87,7 @@
     <script>
         const contextPath = '${contextPath}';
     </script>
+    <script src="${contextPath}/assets/js/user_applications.js"></script>
 </#macro>
 
 <#macro footer>

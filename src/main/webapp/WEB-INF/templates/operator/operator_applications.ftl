@@ -55,16 +55,16 @@
                                     </div>
                                 </div>
 
-                                <div class="application-actions">
-                                    <#if operatorApplication.status() == 'PENDING'>
-                                        <button class="btn-application btn-application-approve" onclick="approveApplication(123)">
+                                <#if operatorApplication.status() == 'PENDING'>
+                                    <div class="application-actions">
+                                        <button id="approve-btn-${operatorApplication.applicationId()}" class="btn-application btn-application-approve" onclick="approveApplication(${operatorApplication.applicationId()})">
                                             Одобрить
                                         </button>
                                         <button id="reject-btn-${operatorApplication.applicationId()}" class="btn-application btn-application-reject" onclick="rejectApplication(${operatorApplication.applicationId()})">
                                             Отклонить
                                         </button>
-                                    </#if>
-                                </div>
+                                    </div>
+                                </#if>
                             </div>
                         </div>
                     </#list>
