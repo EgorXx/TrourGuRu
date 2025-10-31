@@ -3,6 +3,7 @@ package ru.kpfu.itis.sorokin.service.impl;
 import ru.kpfu.itis.sorokin.dao.*;
 import ru.kpfu.itis.sorokin.dto.*;
 import ru.kpfu.itis.sorokin.entity.*;
+import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.ImageUploadService;
@@ -217,6 +218,63 @@ public class TourServiceImpl implements TourService {
     @Override
     public List<CardTourDto> getToursByOperatorId(Integer operatorId) {
         return tourDao.findAllByOperatorId(operatorId);
+    }
+
+    @Override
+    public void deleteTour(Integer tourId, Integer operatorId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<TourEntity> tourEntityOptional = tourDao.findById(tourId);
+
+        if (!tourEntityOptional.isPresent()) {
+            errors.put("tour", "Тур не найден");
+            throw new ValidationException(errors);
+        }
+
+        TourEntity tourEntity = tourEntityOptional.get();
+
+        if (!tourEntity.getOperatorId().equals(operatorId)) {
+            errors.put("root", "У вас недостаточно прав для удаления этого тура");
+            throw new ValidationException(errors);
+        }
+
+        List<ImageTour> imageTours = tourImageDao.findByTourId(tourId);
+
+        List<String> publicIds = imageTours.stream()
+                .map(ImageTour::getImageUrl)
+                .map(s -> extractPublicIdImageFromUrl(s))
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (!publicIds.isEmpty()) {
+            try {
+                imageUploadService.delete(publicIds);
+            } catch (Exception e) {
+                throw new ServiceException("Failed delete images", e);
+            }
+        }
+
+        try {
+            tourDao.deleteById(tourId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed delete tour", e);
+        }
+
+    }
+
+    private String extractPublicIdImageFromUrl(String url) {
+        String[] parts = url.split("/");
+
+        if (parts.length > 0) {
+            String lastPart = parts[parts.length - 1];
+            int indexDot = lastPart.lastIndexOf(".");
+
+            if (indexDot != -1) {
+                return lastPart.substring(0, indexDot);
+            }
+        }
+
+        return null;
     }
 
     private void validate(TourCreateDto tourCreateDto, List<ImageTourAddDto> imageTourAddDtos) throws ValidationException {
