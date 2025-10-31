@@ -47,6 +47,12 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
             SELECT id, tour_id, user_id, status FROM application_tour WHERE id = ?
             """;
 
+    private static final String SQL_UPDATE_STATUS_BY_ID = """
+            UPDATE application_tour
+            SET status = ?::general_status
+            WHERE application_tour.id = ?
+            """;
+
 
     @Override
     public void save(ApplicationTour applicationTour) {
@@ -180,6 +186,21 @@ public class ApplicationTourDaoImpl implements ApplicationTourDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed delete application_tour by id", e);
+        }
+    }
+
+    @Override
+    public void updateStatusById(Integer id, Status status) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STATUS_BY_ID)) {
+
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update application_tour status by id", e);
         }
     }
 
