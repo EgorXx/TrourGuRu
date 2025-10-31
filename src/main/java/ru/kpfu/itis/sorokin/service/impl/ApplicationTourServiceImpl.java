@@ -9,6 +9,7 @@ import ru.kpfu.itis.sorokin.dto.UserApplicationTourDto;
 import ru.kpfu.itis.sorokin.entity.ApplicationTour;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Status;
+import ru.kpfu.itis.sorokin.entity.TourEntity;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.exception.DuplicateApplicationException;
 import ru.kpfu.itis.sorokin.exception.ServiceException;
@@ -106,6 +107,38 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
             applicationTourDao.deleteById(applicationId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed cancel application", e);
+        }
+    }
+
+    @Override
+    public void rejectApplicationByOperator(Integer operatorId, Integer applicationId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<ApplicationTour> applicationTourOptional = applicationTourDao.findById(applicationId);
+
+        if (!applicationTourOptional.isPresent()) {
+            errors.put("application", "Заявка не найдена");
+            throw new ValidationException(errors);
+        }
+
+        ApplicationTour applicationTour = applicationTourOptional.get();
+
+        TourEntity tourEntity = tourDao.findByApplicationId(applicationId).get();
+
+        if (!tourEntity.getOperatorId().equals(operatorId)) {
+            errors.put("root", "У вас недостаточно прав, для удаления этой заявки");
+            throw new ValidationException(errors);
+        }
+
+        if (applicationTour.getStatus() != Status.PENDING) {
+            errors.put("status", "Можно удалять только заявки со статусом \"На рассмотрении\"");
+            throw new ValidationException(errors);
+        }
+
+        try {
+            applicationTourDao.deleteById(applicationId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed reject application by operator", e);
         }
     }
 

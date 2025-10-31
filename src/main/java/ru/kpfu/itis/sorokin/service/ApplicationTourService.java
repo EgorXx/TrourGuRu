@@ -14,5 +14,7 @@ public interface ApplicationTourService {
 
     void cancelApplication(Integer userId, Integer applicationId) throws ValidationException;
 
+    void rejectApplicationByOperator(Integer operatorId, Integer applicationId) throws ValidationException;
+
     List<OperatorApplicationTourDto> getActiveApplicationByOperatorId(Integer operatorId);
 }
