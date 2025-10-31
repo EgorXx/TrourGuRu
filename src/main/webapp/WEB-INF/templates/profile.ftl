@@ -52,7 +52,7 @@
             </#if>
 
             <#if user.isOperator()>
-                <a href="#" class="btn btn-profile-action">
+                <a href="${contextPath}/operator/my-tours" class="btn btn-profile-action">
                     <span class="icon-circle"><i class="bi bi-brightness-high"></i></span>
                     Мои туры
                 </a>
