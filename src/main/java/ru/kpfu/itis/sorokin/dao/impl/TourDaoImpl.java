@@ -40,6 +40,8 @@ public class TourDaoImpl implements TourDao {
             WHERE tour_image.is_main = true AND operator.user_id = ?
             """;
 
+    private static final String SQL_DELETE_BY_ID = "DELETE FROM tour WHERE id = ?";
+
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS)) {
@@ -186,5 +188,18 @@ public class TourDaoImpl implements TourDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete by id", e);
+        }
     }
 }

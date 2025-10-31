@@ -17,4 +17,6 @@ public interface TourDao {
     List<CardTourDto> findAllByOperatorId(Integer operatorId);
 
     Optional<TourEntity> findByApplicationId(Integer applicationId);
+
+    void deleteById(Integer id);
 }

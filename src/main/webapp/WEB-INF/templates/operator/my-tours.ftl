@@ -46,13 +46,13 @@
                                         </div>
 
                                         <div class="tour-actions">
-                                            <a href="#" class="btn btn-action btn-details" title="Подробнее">
+                                            <a href="${contextPath}/tours/${tourCard.id()}" class="btn btn-action btn-details" title="Подробнее">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
                                             <a href="#" class="btn btn-action btn-edit" title="Редактировать">
                                                 <i class="bi bi-pencil-fill"></i>
                                             </a>
-                                            <button class="btn btn-action btn-delete" data-tour-id="${tourCard.id()}" title="Удалить">
+                                            <button id="delete-btn-${tourCard.id()}" class="btn btn-action btn-delete" onclick="deleteTour(${tourCard.id()})" title="Удалить">
                                                 <i class="bi bi-trash-fill"></i>
                                             </button>
                                         </div>
@@ -66,7 +66,6 @@
                             <div class="empty-state">
                                 <i class="bi bi-suitcase-lg"></i>
                                 <p>У вас пока нет добавленных туров</p>
-                                <a href="${contextPath}/add-tour" class="btn btn-add-tour">Добавить тур</a>
                             </div>
                         </div>
                     </#if>
