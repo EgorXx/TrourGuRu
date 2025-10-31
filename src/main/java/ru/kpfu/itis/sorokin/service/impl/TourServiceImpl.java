@@ -214,6 +214,11 @@ public class TourServiceImpl implements TourService {
         return tourDao.findAll(limit, offset);
     }
 
+    @Override
+    public List<CardTourDto> getToursByOperatorId(Integer operatorId) {
+        return tourDao.findAllByOperatorId(operatorId);
+    }
+
     private void validate(TourCreateDto tourCreateDto, List<ImageTourAddDto> imageTourAddDtos) throws ValidationException {
         Map<String, String> errors = new HashMap<>();
 

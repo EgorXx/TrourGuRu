@@ -9,4 +9,5 @@ public interface TourService {
     Integer createTour(TourCreateDto tourCreateDto, List<ImageTourAddDto> imageTourAddDtos, UserSessionDto userSessionDto) throws ValidationException;
     TourDetailDto findById(Integer tourId);
     List<CardTourDto> getTours(int page, int pageSize);
+    List<CardTourDto> getToursByOperatorId(Integer operatorId);
 }
