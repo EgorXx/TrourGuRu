@@ -16,13 +16,21 @@ import java.util.Optional;
 
 public class TourDaoImpl implements TourDao {
     private static final String SQL_SAVE = "INSERT INTO tour (title, operator_id, destination, description, duration) VALUES (?, ?, ?, ?, ?)";
+
     private static final String SQL_FIND_BY_ID = "SELECT title, operator_id, destination, description, duration FROM tour WHERE id=?";
+
     private static final String SQL_FIND_ALL = """
             SELECT tour.id, title, destination, duration, company_name, image_url
             FROM tour INNER JOIN operator ON tour.operator_id = operator.user_id
             INNER JOIN tour_image ON tour.id = tour_image.tour_id
             WHERE tour_image.is_main = true
             LIMIT ? OFFSET ?
+            """;
+
+    private static final String SQL_FIND_BY_APPLICATION_ID = """
+            SELECT title, operator_id, destination, description, duration 
+            FROM tour INNER JOIN application_tour ON tour.id = application_tour.tour_id
+            WHERE application_tour = ?
             """;
 
     @Override
@@ -113,5 +121,34 @@ public class TourDaoImpl implements TourDao {
         } catch (SQLException e) {
             throw new DataAccessException("Failed select tours", e);
         }
+    }
+
+    @Override
+    public Optional<TourEntity> findByApplicationId(Integer applicationId) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_BY_APPLICATION_ID)) {
+
+            preparedStatement.setInt(1, applicationId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(
+                            new TourEntity(
+                                    resultSet.getInt("id"),
+                                    resultSet.getString("title"),
+                                    resultSet.getInt("operator_id"),
+                                    resultSet.getString("destination"),
+                                    resultSet.getString("description"),
+                                    resultSet.getInt("duration")
+                            )
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select tourEntity by applicationId", e);
+        }
+
+        return Optional.empty();
     }
 }
