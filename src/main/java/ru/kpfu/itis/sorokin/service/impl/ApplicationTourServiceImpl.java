@@ -16,6 +16,7 @@ import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.ApplicationTourService;
 
+import java.security.Provider;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,6 +140,38 @@ public class ApplicationTourServiceImpl implements ApplicationTourService {
             applicationTourDao.deleteById(applicationId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed reject application by operator", e);
+        }
+    }
+
+    @Override
+    public void approveApplicationByOperator(Integer operatorId, Integer applicationId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<ApplicationTour> applicationTourOptional = applicationTourDao.findById(applicationId);
+
+        if (!applicationTourOptional.isPresent()) {
+            errors.put("application", "Заявка не найдена");
+            throw new ValidationException(errors);
+        }
+
+        ApplicationTour applicationTour = applicationTourOptional.get();
+
+        TourEntity tourEntity = tourDao.findByApplicationId(applicationId).get();
+
+        if (!tourEntity.getOperatorId().equals(operatorId)) {
+            errors.put("root", "У вас недостаточно прав, для одобрения этой заявки");
+            throw new ValidationException(errors);
+        }
+
+        if (applicationTour.getStatus() != Status.PENDING) {
+            errors.put("status", "Можно одобрять только заявки со статусом \"На рассмотрении\"");
+            throw new ValidationException(errors);
+        }
+
+        try {
+            applicationTourDao.updateStatusById(operatorId, Status.APPROVED);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed approved application", e);
         }
     }
 
