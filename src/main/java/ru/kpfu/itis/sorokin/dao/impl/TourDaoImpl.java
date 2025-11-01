@@ -42,6 +42,12 @@ public class TourDaoImpl implements TourDao {
 
     private static final String SQL_DELETE_BY_ID = "DELETE FROM tour WHERE id = ?";
 
+    private static final String SQL_UPDATE_BY_ID = """
+            UPDATE tour
+            SET title = ?, destination = ?, description = ?, duration = ?
+            WHERE tour.id = ?
+            """;
+
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS)) {
@@ -200,6 +206,33 @@ public class TourDaoImpl implements TourDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Failed delete by id", e);
+        }
+    }
+
+    @Override
+    public void updateById(Connection connection, TourEntity tour, Integer id) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_BY_ID)) {
+
+            preparedStatement.setString(1, tour.getTitle());
+            preparedStatement.setString(2, tour.getDestination());
+            preparedStatement.setString(3, tour.getDescription());
+            preparedStatement.setInt(4, tour.getDuration());
+            preparedStatement.setInt(5, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update tour by id", e);
+        }
+    }
+
+    @Override
+    public void updateById(TourEntity tour, Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection()) {
+
+            updateById(connection, tour, id);
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed update tour by id", e);
         }
     }
 }

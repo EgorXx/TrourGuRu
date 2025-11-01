@@ -19,4 +19,8 @@ public interface TourDao {
     Optional<TourEntity> findByApplicationId(Integer applicationId);
 
     void deleteById(Integer id);
+
+    void updateById(Connection connection, TourEntity tour, Integer id);
+
+    void updateById(TourEntity tour, Integer id);
 }
