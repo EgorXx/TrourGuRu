@@ -12,7 +12,12 @@ import java.util.List;
 
 public class TourProgramDaoImpl implements TourProgramDao {
     private static final String SQL_SAVE = "INSERT INTO program_tour (tour_id, title, description, day_number) VALUES (?, ?, ?, ?)";
+
     private static final String SQl_SELECT_PROGRAMS_BY_TOUR_ID = "SELECT id, title, description, day_number FROM program_tour WHERE tour_id=?";
+
+    private static final String SQL_DELETE_BY_TOUR_ID = """
+            DELETE FROM program_tour WHERE tour_category.tour_id = ?
+            """;
 
     @Override
     public ProgramTour save(ProgramTour programTour, Connection connection) {
@@ -84,6 +89,19 @@ public class TourProgramDaoImpl implements TourProgramDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed select programs by tourId", e);
+        }
+    }
+
+    @Override
+    public void deleteByTourId(Connection connection, Integer tourId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_TOUR_ID)) {
+
+            preparedStatement.setInt(1, tourId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete program_tour by tourId", e);
         }
     }
 
