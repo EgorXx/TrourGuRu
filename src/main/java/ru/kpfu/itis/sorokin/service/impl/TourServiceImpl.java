@@ -262,6 +262,137 @@ public class TourServiceImpl implements TourService {
 
     }
 
+    @Override
+    public void updateTour(TourUpdateDto tourUpdateDto, Integer operatorId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<TourEntity> tourEntityOptional = tourDao.findById(tourUpdateDto.tourId());
+
+        if (!tourEntityOptional.isPresent()) {
+            errors.put("tour", "Тур не найден");
+            throw new ValidationException(errors);
+        }
+
+        TourEntity tour = tourEntityOptional.get();
+
+        if (!tour.getOperatorId().equals(operatorId)) {
+            errors.put("root", "У вас недостаточно прав для удаления этого тура");
+            throw new ValidationException(errors);
+        }
+
+        validateUpdateTour(tourUpdateDto);
+
+        Integer tourId = tourUpdateDto.tourId();
+
+        TourEntity tourEntity = new TourEntity();
+
+        tourEntity.setTitle(tourUpdateDto.title());
+        tourEntity.setDestination(tourUpdateDto.destination());
+        tourEntity.setDescription(tourUpdateDto.description());
+        tourEntity.setDuration(tourUpdateDto.duration());
+
+        List<Integer> categoryIds = tourUpdateDto.categoryIds();
+
+        List<ProgramTour> programs = tourUpdateDto.programs().stream()
+                .map(p -> {
+                    ProgramTour programTour = new ProgramTour();
+                    programTour.setTourId(tourId);
+                    programTour.setTitle(p.title());
+                    programTour.setDescription(p.description());
+                    programTour.setDayNumber(p.dayNumber());
+                    return programTour;
+                }).toList();
+
+        List<ServiceTour> services = tourUpdateDto.services().stream()
+                .map(s -> {
+                    ServiceTour serviceTour = new ServiceTour();
+                    serviceTour.setTourId(tourId);
+                    serviceTour.setTitle(s.title());
+                    return serviceTour;
+                }).toList();
+
+        List<ImageTour> oldImages = tourImageDao.findByTourId(tourId);
+
+        List<ImageTourUpdateDto> imageTourUpdateDtos = tourUpdateDto.images();
+
+        List<String> uploadedImagePublicIds = new ArrayList<>();
+        Connection connection = null;
+
+        try {
+            connection = DataBaseConnectionUtil.getConnection();
+            connection.setAutoCommit(false);
+
+            tourDao.updateById(connection, tourEntity, tourId);
+
+            tourCategoryDao.deleteByTourId(connection, tourId);
+            tourCategoryDao.addAll(tourId, categoryIds, connection);
+
+            tourProgramDao.deleteByTourId(connection, tourId);
+            tourProgramDao.saveAll(programs, connection);
+
+            tourServiceDao.deleteByTourId(connection, tourId);
+            tourServiceDao.saveAll(services, connection);
+
+            handleImageReplacement(connection, uploadedImagePublicIds, imageTourUpdateDtos, oldImages, tourId);
+
+            connection.commit();
+        } catch (Exception e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {}
+            }
+
+            try {
+                if (!uploadedImagePublicIds.isEmpty()) {
+                    imageUploadService.delete(uploadedImagePublicIds);
+                }
+            } catch (Exception cleanEx) {}
+
+            throw new ServiceException("Failed update Tour", e);
+
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);
+                    connection.close();
+                } catch (SQLException e) {}
+            }
+        }
+    }
+
+    private void handleImageReplacement(Connection connection, List<String> uploadedPublicIds, List<ImageTourUpdateDto> imageTourUpdateDtos, List<ImageTour> oldImages, Integer tourId) throws Exception {
+        List<String> publicIds = oldImages.stream()
+                .map(ImageTour::getImageUrl)
+                .map(this::extractPublicIdImageFromUrl)
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (!publicIds.isEmpty()) {
+            imageUploadService.delete(publicIds);
+        }
+
+        tourImageDao.deleteByTourId(connection, tourId);
+
+
+        List<ImageTour> newImages = new ArrayList<>();
+
+        for (ImageTourUpdateDto imageDto : imageTourUpdateDtos) {
+            ImageUploadResult result = imageUploadService.upload(imageDto.inputStream(), null);
+
+            ImageTour image = new ImageTour();
+            image.setTourId(tourId);
+            image.setImageUrl(result.secureUrl());
+            image.setMain(imageDto.isMain());
+            newImages.add(image);
+
+            uploadedPublicIds.add(result.publicId());
+        }
+
+        tourImageDao.saveAll(newImages, connection);
+    }
+
+
     private String extractPublicIdImageFromUrl(String url) {
         String[] parts = url.split("/");
 
@@ -345,6 +476,87 @@ public class TourServiceImpl implements TourService {
             errors.put("tourImages", "Необходимо загрузить хотя бы одно изображение для тура");
         } else {
             long mainImageCount = imageTourAddDtos.stream().filter(ImageTourAddDto::isMain).count();
+
+            if (mainImageCount == 0) {
+                errors.put("tourImages", "Необходимо указать одно главное изображение для тура");
+            } else if (mainImageCount > 1) {
+                errors.put("tourImages", "Главное изображение может быть только одно");
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            throw new ValidationException(errors);
+        }
+    }
+
+    private void validateUpdateTour(TourUpdateDto tourUpdateDto) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        if (tourUpdateDto.title() == null || tourUpdateDto.title().isBlank()) {
+            errors.put("tourTitle", "Название тура не может быть пустым");
+        } else if (tourUpdateDto.title().length() > 63) {
+            errors.put("tourTitle", "Название тура не может превышать 63 символа");
+        }
+
+
+        if (tourUpdateDto.destination() == null || tourUpdateDto.destination().isBlank()) {
+            errors.put("tourDestination", "Место назначения не может быть пустым");
+        } else if (tourUpdateDto.destination().length() > 63) {
+            errors.put("tourDestination", "Место назначения не может превышать 63 символа");
+        }
+
+
+        if (tourUpdateDto.description() == null || tourUpdateDto.description().isBlank()) {
+            errors.put("tourDescription", "Описание тура не может быть пустым");
+        } else if (tourUpdateDto.description().length() > 1023) {
+            errors.put("tourDescription", "Описание тура не может превышать 1023 символа");
+        }
+
+
+        if (tourUpdateDto.duration() == null) {
+            errors.put("tourDuration", "Длительность тура должна быть указана");
+        } else if (tourUpdateDto.duration() <= 0) {
+            errors.put("tourDuration", "Длительность тура должна быть положительным числом");
+        }
+
+
+        if (tourUpdateDto.programs() == null || tourUpdateDto.programs().isEmpty()) {
+            errors.put("tourPrograms", "Программа тура должна содержать хотя бы один день");
+        } else {
+            for (ProgramTourUpdateDto programDto : tourUpdateDto.programs()) {
+                if (programDto.title() == null || programDto.title().isBlank()) {
+                    errors.put("tourPrograms", "Название дня в программе не может быть пустым");
+                    break;
+                } else if (programDto.title().length() > 63) {
+                    errors.put("tourPrograms", "Название дня в программе не может превышать 63 символа");
+                    break;
+                } else if (programDto.dayNumber() == null || programDto.dayNumber() < 1) {
+                    errors.put("tourPrograms", "Номер дня в программе должен быть 1 или больше");
+                    break;
+                }
+            }
+        }
+
+
+        if (tourUpdateDto.services() == null || tourUpdateDto.services().isEmpty()) {
+            errors.put("tourServices", "Услуги тура должны содержать хотя бы одну услугу");
+        } else {
+            for (ServiceTourUpdateDto serviceDto : tourUpdateDto.services()) {
+                if (serviceDto.title() == null || serviceDto.title().isBlank()) {
+                    errors.put("tourServices", "Название услуги не может быть пустым");
+                    break;
+                } else if (serviceDto.title().length() > 63) {
+                    errors.put("tourServices", "Название услуги не может превышать 63 символа");
+                    break;
+                }
+            }
+        }
+
+
+        if (tourUpdateDto.images() == null || tourUpdateDto.images().isEmpty()) {
+            errors.put("tourImages", "Необходимо загрузить хотя бы одно изображение для тура");
+        } else {
+            long mainImageCount = tourUpdateDto.images().stream().filter(ImageTourUpdateDto::isMain).count();
 
             if (mainImageCount == 0) {
                 errors.put("tourImages", "Необходимо указать одно главное изображение для тура");
