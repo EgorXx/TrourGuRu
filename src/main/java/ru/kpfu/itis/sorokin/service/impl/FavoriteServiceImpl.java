@@ -12,6 +12,7 @@ import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.FavoriteService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,5 +46,14 @@ public class FavoriteServiceImpl implements FavoriteService {
             throw new ServiceException("Failed toggle favorite", e);
         }
 
+    }
+
+    @Override
+    public List<Integer> getAllFavoritesByUserId(Integer userId) {
+        try {
+            return favoriteDao.findAllFavoritesByUserId(userId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get favorites by userId", e);
+        }
     }
 }
