@@ -14,10 +14,15 @@ import java.util.Optional;
 
 public class TourCategoryDaoImpl implements TourCategoryDao {
     private static final String SQL_SAVE = "INSERT INTO tour_category (tour_id, category_id) VALUES (?, ?)";
+
     private static final String SQl_SELECT_CATEGORIES_BY_TOUR_ID =
             "SELECT category.id, category.title " +
             "FROM tour_category INNER JOIN category ON tour_category.category_id = category.id " +
                     "WHERE tour_category.tour_id=?";
+
+    private static final String SQL_DELETE_BY_TOUR_ID = """
+            DELETE FROM tour_category WHERE tour_category.tour_id = ?
+            """;
 
 
     @Override
@@ -70,6 +75,19 @@ public class TourCategoryDaoImpl implements TourCategoryDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed select categories by tourId", e);
+        }
+    }
+
+    @Override
+    public void deleteByTourId(Connection connection, Integer tourId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_TOUR_ID)) {
+
+            preparedStatement.setInt(1, tourId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete tour_category by tourId", e);
         }
     }
 }

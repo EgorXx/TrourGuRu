@@ -12,4 +12,6 @@ public interface TourCategoryDao {
      void addAll(Integer tourId, List<Integer> categoryIds, Connection connection);
 
      List<Category> findByTourId(Integer tourId);
+
+     void deleteByTourId(Connection connection, Integer tourId);
 }
