@@ -49,7 +49,7 @@
                                             <a href="${contextPath}/tours/${tourCard.id()}" class="btn btn-action btn-details" title="Подробнее">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
-                                            <a href="#" class="btn btn-action btn-edit" title="Редактировать">
+                                            <a href="${contextPath}/operator/edit-tour?id=${tourCard.id()}" class="btn btn-action btn-edit" title="Редактировать">
                                                 <i class="bi bi-pencil-fill"></i>
                                             </a>
                                             <button id="delete-btn-${tourCard.id()}" class="btn btn-action btn-delete" onclick="deleteTour(${tourCard.id()})" title="Удалить">
