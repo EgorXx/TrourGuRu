@@ -71,7 +71,12 @@
                                                         ${tourCard.operatorName()}
                                                     </div>
 
-                                                    <a href="${contextPath}/tours/${tourCard.id()}" class="btn btn-details">Подробнее</a>
+                                                    <div class="tour-actions">
+                                                        <a href="${contextPath}/tours/${tourCard.id()}" class="btn btn-details">Подробнее</a>
+                                                        <button class="favorite-btn" data-tour-id="${tourCard.id()}">
+                                                            <i class="bi bi-heart"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -96,7 +101,14 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         const contextPath = '${contextPath}';
+        const isLoggedIn = <#if user??>true<#else>false</#if>;
+        const userFavorites = new Set([
+            <#if favoriteTourIds??>
+            <#list favoriteTourIds as id>${id}<#sep>,</#list>
+            </#if>
+        ]);
     </script>
+    <script src="${contextPath}/assets/js/favorite.js"></script>
     <script src="${contextPath}/assets/js/tour_list.js"></script>
 </#macro>
 

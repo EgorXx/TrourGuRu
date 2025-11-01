@@ -28,7 +28,12 @@
                         ${tourCard.operatorName()}
                     </div>
 
-                    <a href="${contextPath}/tours/${tourCard.id()}" class="btn btn-details">Подробнее</a>
+                    <div class="tour-actions">
+                        <a href="${contextPath}/tours/${tourCard.id()}" class="btn btn-details">Подробнее</a>
+                        <button class="favorite-btn" data-tour-id="${tourCard.id()}">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 

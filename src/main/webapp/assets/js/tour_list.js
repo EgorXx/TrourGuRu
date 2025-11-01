@@ -12,6 +12,8 @@ $(document).ready(function () {
             .done(function (html){
                 $('#tours-list').append(html);
 
+                initializeFavoriteButtons();
+
                 let newCardsCount = $(html).filter('.col-lg-4').length;
                 if (newCardsCount < 6) {
                     $("#load-more-btn").hide();

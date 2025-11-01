@@ -2,6 +2,8 @@ package ru.kpfu.itis.sorokin.controller;
 
 import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.dto.TourDetailDto;
+import ru.kpfu.itis.sorokin.dto.UserSessionDto;
+import ru.kpfu.itis.sorokin.service.FavoriteService;
 import ru.kpfu.itis.sorokin.service.TourService;
 
 import javax.servlet.ServletException;
@@ -9,21 +11,26 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "Tours", urlPatterns = "/tours/*")
 public class TourServlet extends HttpServlet {
     private TourService tourService;
+    private FavoriteService favoriteService;
 
 
     @Override
     public void init() throws ServletException {
         tourService = (TourService) getServletContext().getAttribute("tourService");
+        favoriteService = (FavoriteService) getServletContext().getAttribute("favoriteService");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        loadUserFavorites(req);
+
         String path = req.getPathInfo();
 
         if (path == null || path.equals("/")) {
@@ -74,4 +81,14 @@ public class TourServlet extends HttpServlet {
         }
 
     }
+    private void loadUserFavorites(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+
+        if (session != null && session.getAttribute("user") != null) {
+            UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
+            List<Integer> favoriteTourIds = favoriteService.getAllFavoritesByUserId(userSessionDto.id());
+            req.setAttribute("favoriteTourIds", favoriteTourIds);
+        }
+    }
+
 }

@@ -202,8 +202,14 @@
     margin-bottom: 1rem;
 }
 
+.tour-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .btn-details {
-    width: 100%;
+    flex: 1;
     background-color: #29a143;
     border-color: #29a143;
     color: white;
@@ -211,14 +217,46 @@
     border-radius: 8px;
     font-weight: 600;
     transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
 }
 
 .btn-details:hover {
     color: #29a143;
     background-color: #ffffff;
-    border-color: #29a143;
+    border: 2px solid #29a143;
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
+
+.favorite-btn {
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    border: 2px solid #29a143;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.favorite-btn i {
+    color: #29a143;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.favorite-btn.active {
+    background-color: #29a143;
+}
+
+.favorite-btn.active i {
+    color: white;
+}
+
 
 .load-more-container {
     text-align: center;

@@ -127,6 +127,11 @@
 
                         <div id="application-message" class="application-message"></div>
 
+                        <button class="favorite-btn btn-favorite" data-tour-id="${tourId}">
+                            <i class="bi bi-heart"></i>
+                            <span>В избранное</span>
+                        </button>
+
                         <#if user?? && user.isUser()>
                             <button id="apply-btn"
                                     class="btn-apply"
@@ -146,7 +151,14 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         const contextPath = '${contextPath}';
+        const isLoggedIn = <#if user??>true<#else>false</#if>;
+        const userFavorites = new Set([
+            <#if favoriteTourIds??>
+            <#list favoriteTourIds as id>${id}<#sep>,</#list>
+            </#if>
+        ]);
     </script>
+    <script src="${contextPath}/assets/js/favorite.js"></script>
     <script src="${contextPath}/assets/js/tour_detail.js"></script>
 </#macro>
 
