@@ -58,11 +58,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const servicesList = document.getElementById('servicesList');
     const hiddenServices = document.getElementById('hiddenServices');
 
-
     function updateHiddenServices() {
         const items = [];
         servicesList.querySelectorAll('li').forEach(function(item) {
-            items.push(item.textContent);
+            const textNode = item.firstChild;
+            if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+                const text = textNode.textContent.trim();
+                if (text) {
+                    items.push(text);
+                }
+            }
         });
 
         hiddenServices.value = items.join(',');
@@ -107,5 +112,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cancelBtn.addEventListener('click', function () {
         window.history.back();
+    });
+
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function(e) {
+        updateHiddenServices();
     });
 });
