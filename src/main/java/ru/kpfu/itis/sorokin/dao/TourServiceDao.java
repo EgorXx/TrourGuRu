@@ -13,4 +13,6 @@ public interface TourServiceDao {
     List<ServiceTour> saveAll(List<ServiceTour> serviceTours, Connection connection);
 
     List<ServiceTour> findByTourId(Integer tourId);
+
+    void deleteByTourId(Connection connection, Integer tourId);
 }

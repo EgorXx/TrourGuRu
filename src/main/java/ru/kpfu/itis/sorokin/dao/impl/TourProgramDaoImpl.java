@@ -16,7 +16,7 @@ public class TourProgramDaoImpl implements TourProgramDao {
     private static final String SQl_SELECT_PROGRAMS_BY_TOUR_ID = "SELECT id, title, description, day_number FROM program_tour WHERE tour_id=?";
 
     private static final String SQL_DELETE_BY_TOUR_ID = """
-            DELETE FROM program_tour WHERE tour_category.tour_id = ?
+            DELETE FROM program_tour WHERE program_tour.tour_id = ?
             """;
 
     @Override

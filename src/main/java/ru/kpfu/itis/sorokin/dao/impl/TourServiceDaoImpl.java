@@ -15,7 +15,12 @@ import java.util.List;
 
 public class TourServiceDaoImpl implements TourServiceDao {
     private static final String SQL_SAVE = "INSERT INTO service_tour (tour_id, title) VALUES (?, ?)";
+
     private static final String SQl_SELECT_SERVICES_BY_TOUR_ID = "SELECT id, title FROM service_tour WHERE tour_id=?";
+
+    private static final String SQL_DELETE_BY_TOUR_ID = """
+            DELETE FROM service_tour WHERE service_tour.tour_id = ?
+            """;
 
     @Override
     public ServiceTour save(ServiceTour serviceTour, Connection connection) {
@@ -83,6 +88,19 @@ public class TourServiceDaoImpl implements TourServiceDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed select services by tourId", e);
+        }
+    }
+
+    @Override
+    public void deleteByTourId(Connection connection, Integer tourId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_TOUR_ID)) {
+
+            preparedStatement.setInt(1, tourId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete program_tour by tourId", e);
         }
     }
 }
