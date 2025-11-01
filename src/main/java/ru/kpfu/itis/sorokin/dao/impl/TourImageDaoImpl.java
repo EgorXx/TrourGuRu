@@ -11,7 +11,12 @@ import java.util.List;
 
 public class TourImageDaoImpl implements TourImageDao {
     private static final String SQL_SAVE = "INSERT INTO tour_image (tour_id, image_url, is_main) VALUES (?, ?, ?)";
+
     private static final String SQl_SELECT_IMAGES_BY_TOUR_ID = "SELECT id, image_url, is_main FROM tour_image WHERE tour_id=?";
+
+    private static final String SQL_DELETE_BY_TOUR_ID = """
+            DELETE FROM tour_image WHERE tour_image.tour_id = ?
+            """;
 
     @Override
     public ImageTour save(ImageTour imageTour, Connection connection) {
@@ -81,6 +86,19 @@ public class TourImageDaoImpl implements TourImageDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed select images by tourId", e);
+        }
+    }
+
+    @Override
+    public void deleteByTourId(Connection connection, Integer tourId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_TOUR_ID)) {
+
+            preparedStatement.setInt(1, tourId);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete tour_image by tourId", e);
         }
     }
 }

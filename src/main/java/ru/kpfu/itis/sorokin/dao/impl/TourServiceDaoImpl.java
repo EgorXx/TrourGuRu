@@ -100,7 +100,7 @@ public class TourServiceDaoImpl implements TourServiceDao {
             preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DataAccessException("Failed delete program_tour by tourId", e);
+            throw new DataAccessException("Failed delete service_tour by tourId", e);
         }
     }
 }

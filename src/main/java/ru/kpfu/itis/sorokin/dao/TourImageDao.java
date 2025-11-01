@@ -12,4 +12,6 @@ public interface TourImageDao {
     List<ImageTour> saveAll(List<ImageTour> imageTours, Connection connection);
 
     List<ImageTour> findByTourId(Integer tourId);
+
+    void deleteByTourId(Connection connection, Integer tourId);
 }
