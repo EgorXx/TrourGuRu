@@ -45,7 +45,7 @@
                     Мои отзывы
                 </a>
 
-                <a href="#" class="btn btn-profile-action">
+                <a href="${contextPath}/user/my-favorite" class="btn btn-profile-action">
                     <span class="icon-circle"><i class="bi bi-heart-fill"></i></span>
                     Избранное
                 </a>

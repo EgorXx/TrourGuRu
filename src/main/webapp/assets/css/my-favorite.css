@@ -1,0 +1,219 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    flex-shrink: 0;
+}
+
+footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+.btn-nav-outline {
+    color: #29a143;
+    border-color: #29a143;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-nav-outline:hover {
+    color: #ffffff;
+    background-color: #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-nav-primary {
+    color: #ffffff;
+    background-color: #29a143;
+    border-color: #29a143;
+}
+
+.btn-nav-primary:hover {
+    color: #29a143;
+    background-color: #ffffff;
+    border-color: #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+            linear-gradient(90deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            linear-gradient(270deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            url('../image/background_main_page.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px);
+}
+
+.tours-container {
+    flex: 1;
+    padding: 4rem 0;
+    background: linear-gradient(90deg, rgba(81, 236, 124, 0.08) 0%, rgba(40, 167, 69, 0.02) 60%);
+}
+
+.tours-content-wrapper {
+    background-color: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.tour-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: white;
+    position: relative;
+}
+
+.tour-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.tour-favorite i {
+    color: #29a143;
+    font-size: 1.1rem;
+}
+
+.tour-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.tour-content {
+    padding: 1.2rem;
+}
+
+.tour-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.8rem;
+    min-height: 2.5rem;
+}
+
+.tour-info {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.tour-info i {
+    margin-right: 0.4rem;
+    color: #29a143;
+    font-size: 0.95rem;
+}
+
+.tour-operator {
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.tour-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-details {
+    flex: 1;
+    background-color: #29a143;
+    border-color: #29a143;
+    color: white;
+    padding: 0.7rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+}
+
+.btn-details:hover {
+    color: #29a143;
+    background-color: #ffffff;
+    border: 2px solid #29a143;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.favorite-btn {
+    width: 45px;
+    height: 45px;
+    background-color: white;
+    border: 2px solid #29a143;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.favorite-btn i {
+    color: #29a143;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.favorite-btn.active {
+    background-color: #29a143;
+}
+
+.favorite-btn.active i {
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #29a143;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .tour-image {
+        height: 180px;
+    }
+}

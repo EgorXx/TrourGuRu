@@ -26,6 +26,7 @@ $(document).ready(function () {
 
             success: function (response) {
                 if (response.success) {
+
                     if (response.isFavorite) {
                         btn.addClass('active');
                         userFavorites.add(tourId);
@@ -33,6 +34,30 @@ $(document).ready(function () {
                         btn.removeClass('active');
                         userFavorites.delete(tourId);
                     }
+
+                    if (window.location.pathname.includes('/my-favorite')) {
+                        const cardContainer = btn.closest('.col-lg-4, .col-md-6, .col-sm-12');
+
+                        if (cardContainer) {
+                            $(cardContainer).fadeOut(300, function() {
+                                $(this).remove();
+
+
+                                if ($('#tours-list .tour-card').length === 0) {
+                                    $('#tours-list').html(`
+                                    <div class="col-12">
+                                        <div class="empty-state">
+                                            <i class="bi bi-suitcase-lg"></i>
+                                            <p>У вас пока нет добавленных в избранное туров</p>
+                                        </div>
+                                    </div>
+                                    `);
+                                }
+
+                            });
+                        }
+                    }
+
                 } else {
                     alert(response.message || 'Произошла ошибка');
                 }
