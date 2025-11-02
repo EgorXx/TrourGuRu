@@ -2,14 +2,12 @@ package ru.kpfu.itis.sorokin.service.impl;
 
 import ru.kpfu.itis.sorokin.dao.OperatorDao;
 import ru.kpfu.itis.sorokin.dao.UserDao;
-import ru.kpfu.itis.sorokin.dto.OperatorSignUpDto;
-import ru.kpfu.itis.sorokin.dto.OperatorUpdateInfoDto;
-import ru.kpfu.itis.sorokin.dto.OperatorViewDto;
-import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
+import ru.kpfu.itis.sorokin.dto.*;
 import ru.kpfu.itis.sorokin.entity.Operator;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Status;
 import ru.kpfu.itis.sorokin.entity.User;
+import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.OperatorService;
@@ -19,6 +17,7 @@ import ru.kpfu.itis.sorokin.util.PasswordUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -131,6 +130,15 @@ public class OperatorServiceImpl  implements OperatorService {
                 } catch (SQLException e) {
                 }
             }
+        }
+    }
+
+    @Override
+    public List<OperatorInfoDto> getAllOperatorsWithPendingStatus() {
+        try {
+            return operatorDao.findAllPendingStatus();
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get operators with pending status", e);
         }
     }
 

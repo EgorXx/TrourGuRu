@@ -1,11 +1,9 @@
 package ru.kpfu.itis.sorokin.service;
 
-import ru.kpfu.itis.sorokin.dto.OperatorSignUpDto;
-import ru.kpfu.itis.sorokin.dto.OperatorUpdateInfoDto;
-import ru.kpfu.itis.sorokin.dto.OperatorViewDto;
-import ru.kpfu.itis.sorokin.dto.UserSignUpDto;
+import ru.kpfu.itis.sorokin.dto.*;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OperatorService {
@@ -15,4 +13,5 @@ public interface OperatorService {
 
     void updateProfile(OperatorUpdateInfoDto operatorUpdateInfoDto) throws ValidationException;
 
+    List<OperatorInfoDto> getAllOperatorsWithPendingStatus();
 }
