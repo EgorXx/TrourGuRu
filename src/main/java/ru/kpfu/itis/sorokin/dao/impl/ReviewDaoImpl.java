@@ -2,6 +2,8 @@ package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.ReviewDao;
 import ru.kpfu.itis.sorokin.entity.Review;
+import ru.kpfu.itis.sorokin.entity.Role;
+import ru.kpfu.itis.sorokin.entity.User;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
@@ -11,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ReviewDaoImpl implements ReviewDao {
     private static final String SQL_SAVE = "INSERT INTO review (text, user_id, tour_id) VALUES(?, ?, ?) RETURNING id, created_time";
@@ -19,6 +22,11 @@ public class ReviewDaoImpl implements ReviewDao {
             SELECT id, text, user_id, tour_id, created_time
             FROM review WHERE tour_id = ?
             """;
+
+    private static final String SQL_FIND_BY_ID = """
+    SELECT id, text, user_id, tour_id, created_time 
+    FROM review WHERE id = ?
+    """;
 
     private static final String SQL_DELETE = "DELETE FROM review WHERE id = ?";
 
@@ -85,5 +93,33 @@ public class ReviewDaoImpl implements ReviewDao {
         } catch (SQLException e) {
             throw new DataAccessException("Failed delete review by id", e);
         }
+    }
+
+    @Override
+    public Optional<Review> findById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(
+                            new Review(
+                                    resultSet.getInt("id"),
+                                    resultSet.getString("text"),
+                                    resultSet.getInt("user_id"),
+                                    resultSet.getInt("tour_id"),
+                                    resultSet.getTimestamp("created_time").toLocalDateTime()
+                            )
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select review by id", e);
+        }
+
+        return Optional.empty();
     }
 }
