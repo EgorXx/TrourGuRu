@@ -51,8 +51,11 @@ public class TourServlet extends HttpServlet {
         List<CardTourDto> tourCards = tourService.getTours(1, 6);
         Boolean hasMore = tourCards.size() == 6;
 
+        List<String> destinations = tourService.getAllTourDestinations();
+
         req.setAttribute("tourCards", tourCards);
         req.setAttribute("hasMore", hasMore);
+        req.setAttribute("destinations", destinations);
 
         req.getRequestDispatcher("/tour_list.ftl").forward(req, resp);
     }

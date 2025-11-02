@@ -12,4 +12,5 @@ public interface TourService {
     List<CardTourDto> getToursByOperatorId(Integer operatorId);
     void deleteTour(Integer tourId, Integer operatorId) throws ValidationException;
     void updateTour(TourUpdateDto tourUpdateDto, Integer operatorId) throws ValidationException;
+    List<String> getAllTourDestinations();
 }

@@ -19,13 +19,52 @@
             <div class="row">
 =
                 <div class="col-lg-2">
-                    <div class="filters-sidebar">
-                        <h3 class="filters-title">Фильтры</h3>
+                    <form action="${contextPath}/tours" method="GET" id="filter-form">
+                        <div class="filters-sidebar">
+                            <h3 class="filters-title">Фильтры</h3>
 
-                        <!-- поле для фильтров -->
+                            <div class="filter-group">
+                                <label class="filter-label">Место назначения</label>
+                                <select name="destination" class="filter-select">
+                                    <option value="">Все направления</option>
+                                    <#if destinations??>
+                                        <#list destinations as dest>
+                                            <option value="${dest}"
+                                                    <#if destination?? && destination == dest>selected</#if>>
+                                                ${dest}
+                                            </option>
+                                        </#list>
+                                    </#if>
+                                </select>
+                            </div>
 
-                        <button class="btn-filter-apply">Применить</button>
-                    </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Длительность (дней)</label>
+                                <div class="duration-inputs">
+                                    <input
+                                            type="number"
+                                            name="minDuration"
+                                            class="filter-input"
+                                            placeholder="От"
+                                            min="1"
+                                            value="${minDuration!''}">
+                                    <span class="duration-separator">—</span>
+                                    <input
+                                            type="number"
+                                            name="maxDuration"
+                                            class="filter-input"
+                                            placeholder="До"
+                                            min="1"
+                                            value="${maxDuration!''}">
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="page" value="1">
+
+                            <button type="submit" class="btn-filter-apply">Применить</button>
+                            <a href="${contextPath}/tours" class="btn-filter-reset">Сбросить</a>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="col-lg-9">
@@ -33,8 +72,8 @@
                         <div class="search-section">
                             <div class="search-wrapper">
                                 <i class="bi bi-search" style="color: #999; font-size: 1.2rem;"></i>
-                                <input type="text" class="search-input" placeholder="Найти тур...">
-                                <button class="btn-search">Поиск</button>
+                                <input type="text" name="search" class="search-input" placeholder="Найти тур..." value="${search!''}" form="filter-form">
+                                <button type="submit" class="btn-search" form="filter-form">Поиск</button>
                             </div>
                         </div>
 

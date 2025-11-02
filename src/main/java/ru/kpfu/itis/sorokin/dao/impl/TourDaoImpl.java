@@ -48,7 +48,7 @@ public class TourDaoImpl implements TourDao {
             WHERE tour.id = ?
             """;
 
-    private static final String SQL_FIND_ALL_DESTINATIONS = "SELECT DISTINCT destination FROM tour ORDER BY ASC";
+    private static final String SQL_FIND_ALL_DESTINATIONS = "SELECT DISTINCT destination FROM tour ORDER BY destination ASC";
 
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {

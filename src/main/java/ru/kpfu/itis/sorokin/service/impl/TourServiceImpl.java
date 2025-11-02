@@ -361,6 +361,15 @@ public class TourServiceImpl implements TourService {
         }
     }
 
+    @Override
+    public List<String> getAllTourDestinations() {
+        try {
+            return tourDao.findAllDestination();
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get tour destinations", e);
+        }
+    }
+
     private void handleImageReplacement(Connection connection, List<String> uploadedPublicIds, List<ImageTourUpdateDto> imageTourUpdateDtos, List<ImageTour> oldImages, Integer tourId) throws Exception {
         List<String> publicIds = oldImages.stream()
                 .map(ImageTour::getImageUrl)

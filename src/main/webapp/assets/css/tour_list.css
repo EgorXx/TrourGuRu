@@ -51,22 +51,6 @@
     background: linear-gradient(90deg, rgba(81, 236, 124, 0.08) 0%, rgba(40, 167, 69, 0.02) 60%);
 }
 
-.filters-sidebar {
-    background-color: white;
-    border-radius: 15px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 20px;
-}
-
-.filters-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 1.5rem;
-}
-
 .btn-filter-apply {
     width: 100%;
     background-color: #29a143;
@@ -279,6 +263,89 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(41, 161, 67, 0.3);
 }
+
+.filters-sidebar {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 20px;
+}
+
+.filters-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    margin-bottom: 1rem;
+}
+
+.filter-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.85rem;
+    margin-bottom: 0.4rem;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.filter-input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    transition: border-color 0.3s;
+}
+
+.duration-separator {
+    color: #999;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.btn-filter-apply {
+    width: 100%;
+    background-color: #29a143;
+    border: 2px solid #29a143;
+    color: white;
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.btn-filter-reset {
+    width: 100%;
+    background-color: white;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    padding: 0.6rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin-top: 0.6rem;
+    transition: all 0.3s;
+}
+
 
 @media (max-width: 991px) {
     .filters-sidebar {
