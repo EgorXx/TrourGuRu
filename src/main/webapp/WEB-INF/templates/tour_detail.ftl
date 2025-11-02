@@ -207,6 +207,7 @@
     </script>
     <script src="${contextPath}/assets/js/favorite.js"></script>
     <script src="${contextPath}/assets/js/tour_detail.js"></script>
+    <script src="${contextPath}/assets/js/reviews.js"></script>
 </#macro>
 
 <#macro footer>
