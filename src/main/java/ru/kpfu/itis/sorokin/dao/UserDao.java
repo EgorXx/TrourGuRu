@@ -19,4 +19,6 @@ public interface UserDao {
     void changePassword(Integer userId, String passwordHash);
 
     Optional<User> findById(Integer id);
+
+    void deleteById(Integer id);
 }

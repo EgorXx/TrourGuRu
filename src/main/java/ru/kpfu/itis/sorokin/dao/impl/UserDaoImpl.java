@@ -26,6 +26,10 @@ public class UserDaoImpl implements UserDao {
             WHERE id = ?
             """;
 
+    private static final String SQL_DELETE_BY_ID = """
+            DELETE FROM users WHERE id = ?
+            """;
+
     @Override
     public User save(User user) {
         try (Connection connection = DataBaseConnectionUtil.getConnection()) {
@@ -168,5 +172,19 @@ public class UserDaoImpl implements UserDao {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed delete user by id", e);
+        }
     }
 }
