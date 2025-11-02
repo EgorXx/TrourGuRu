@@ -14,4 +14,8 @@ public interface OperatorService {
     void updateProfile(OperatorUpdateInfoDto operatorUpdateInfoDto) throws ValidationException;
 
     List<OperatorInfoDto> getAllOperatorsWithPendingStatus();
+
+    void approveOperator(Integer userId) throws ValidationException;
+
+    void rejectOperator(Integer userId) throws ValidationException;
 }

@@ -136,9 +136,45 @@ public class OperatorServiceImpl  implements OperatorService {
     @Override
     public List<OperatorInfoDto> getAllOperatorsWithPendingStatus() {
         try {
-            return operatorDao.findAllPendingStatus();
+            return operatorDao.findAllByStatus(Status.PENDING);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed get operators with pending status", e);
+        }
+    }
+
+    @Override
+    public void approveOperator(Integer userId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<Operator> operatorOptional = operatorDao.findByUserId(userId);
+
+        if (!operatorOptional.isPresent()) {
+            errors.put("operator", "Оператор не найден");
+            throw new ValidationException(errors);
+        }
+
+        try {
+            operatorDao.updateStatusByUserId(userId, Status.APPROVED);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed approve operator", e);
+        }
+    }
+
+    @Override
+    public void rejectOperator(Integer userId) throws ValidationException {
+        Map<String, String> errors = new HashMap<>();
+
+        Optional<Operator> operatorOptional = operatorDao.findByUserId(userId);
+
+        if (!operatorOptional.isPresent()) {
+            errors.put("operator", "Оператор не найден");
+            throw new ValidationException(errors);
+        }
+
+        try {
+            userDao.deleteById(userId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed reject operator", e);
         }
     }
 
