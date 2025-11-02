@@ -105,7 +105,7 @@ public class FavoriteDaoImpl implements FavoriteDao {
     }
 
     @Override
-    public List<CardTourDto> findAllByUserId(Integer userId) {
+    public List<CardTourDto> findAllToursByUserId(Integer userId) {
         try (Connection connection = DataBaseConnectionUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_TOURS_BY_USER_ID)) {
 

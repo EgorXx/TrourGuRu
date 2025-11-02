@@ -9,5 +9,5 @@ public interface FavoriteDao {
     void removeFavorite(Integer userId, Integer tourId);
     boolean isFavorite(Integer userId, Integer tourId);
     List<Integer> findAllFavoritesByUserId(Integer userId);
-    List<CardTourDto> findAllByUserId(Integer userId);
+    List<CardTourDto> findAllToursByUserId(Integer userId);
 }

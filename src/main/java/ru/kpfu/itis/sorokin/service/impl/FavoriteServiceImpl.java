@@ -4,6 +4,7 @@ import ru.kpfu.itis.sorokin.dao.ApplicationTourDao;
 import ru.kpfu.itis.sorokin.dao.FavoriteDao;
 import ru.kpfu.itis.sorokin.dao.TourDao;
 import ru.kpfu.itis.sorokin.dao.UserDao;
+import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.User;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
@@ -54,6 +55,15 @@ public class FavoriteServiceImpl implements FavoriteService {
             return favoriteDao.findAllFavoritesByUserId(userId);
         } catch (DataAccessException e) {
             throw new ServiceException("Failed get favorites by userId", e);
+        }
+    }
+
+    @Override
+    public List<CardTourDto> getFavoriteToursByUserId(Integer userId) {
+        try {
+            return favoriteDao.findAllToursByUserId(userId);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get favorite tours", e);
         }
     }
 }
