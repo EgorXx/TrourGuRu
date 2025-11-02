@@ -367,6 +367,136 @@ body {
     font-size: 1.1rem;
 }
 
+.reviews-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.alert-error p {
+    margin: 0.3rem 0;
+}
+
+.review-form {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.review-form textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+    resize: vertical;
+}
+
+.review-form textarea:focus {
+    outline: none;
+    border-color: #29a143;
+}
+
+.review-form button {
+    background-color: #29a143;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.review-form button:hover {
+    background-color: #218838;
+}
+
+.login-hint {
+    text-align: center;
+    padding: 1rem;
+    background-color: #e7f3ff;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.login-hint a {
+    color: #29a143;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.review-item {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.review-top {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.review-top strong {
+    color: #333;
+}
+
+.badge-owner {
+    background-color: #29a143;
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.review-date {
+    color: #6c757d;
+    font-size: 0.85rem;
+    margin-left: auto;
+}
+
+.btn-delete {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 0.2rem;
+}
+
+.btn-delete:hover {
+    color: #c82333;
+}
+
+.review-item p {
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.empty-text {
+    text-align: center;
+    color: #6c757d;
+    padding: 2rem;
+}
+
+
 
 @media (max-width: 768px) {
     .tour-title {

@@ -1,9 +1,11 @@
 package ru.kpfu.itis.sorokin.controller;
 
 import ru.kpfu.itis.sorokin.dto.CardTourDto;
+import ru.kpfu.itis.sorokin.dto.ReviewDto;
 import ru.kpfu.itis.sorokin.dto.TourDetailDto;
 import ru.kpfu.itis.sorokin.dto.UserSessionDto;
 import ru.kpfu.itis.sorokin.service.FavoriteService;
+import ru.kpfu.itis.sorokin.service.ReviewService;
 import ru.kpfu.itis.sorokin.service.TourService;
 
 import javax.servlet.ServletException;
@@ -19,12 +21,14 @@ import java.util.List;
 public class TourServlet extends HttpServlet {
     private TourService tourService;
     private FavoriteService favoriteService;
+    private ReviewService reviewService;
 
 
     @Override
     public void init() throws ServletException {
         tourService = (TourService) getServletContext().getAttribute("tourService");
         favoriteService = (FavoriteService) getServletContext().getAttribute("favoriteService");
+        reviewService = (ReviewService) getServletContext().getAttribute("reviewService");
     }
 
     @Override
@@ -56,6 +60,25 @@ public class TourServlet extends HttpServlet {
     private void showTourDetail(HttpServletRequest req, HttpServletResponse resp, Integer tourId) throws ServletException, IOException {
         TourDetailDto tourDetailDto = tourService.findById(tourId);
 
+        List<ReviewDto> reviews = reviewService.getReviewsByTourId(tourId);
+
+        HttpSession session = req.getSession(false);
+
+        if (session != null) {
+            Object reviewErrors = session.getAttribute("reviewErrors");
+            Object oldText = session.getAttribute("oldText");
+
+            if (reviewErrors != null) {
+                req.setAttribute("reviewErrors", reviewErrors);
+            }
+            if (oldText != null) {
+                req.setAttribute("oldText", oldText);
+            }
+
+            session.removeAttribute("reviewErrors");
+            session.removeAttribute("oldText");
+        }
+
         req.setAttribute("tourTitle", tourDetailDto.title());
         req.setAttribute("destination", tourDetailDto.destination());
         req.setAttribute("description", tourDetailDto.description());
@@ -68,6 +91,7 @@ public class TourServlet extends HttpServlet {
         req.setAttribute("mainImage", tourDetailDto.mainImage());
         req.setAttribute("otherImages", tourDetailDto.otherImages());
         req.setAttribute("tourId", tourId);
+        req.setAttribute("reviews", reviews);
 
         req.getRequestDispatcher("/tour_detail.ftl").forward(req, resp);
     }

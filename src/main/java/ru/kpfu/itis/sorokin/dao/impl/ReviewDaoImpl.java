@@ -23,7 +23,7 @@ public class ReviewDaoImpl implements ReviewDao {
     SELECT review.id, review.text, review.user_id, review.tour_id, review.created_time,
            users.role,
            CASE 
-               WHEN users.role = 'OPERATOR' THEN operator.name
+               WHEN users.role = 'OPERATOR' THEN operator.company_name
                ELSE users.name
            END as name
     FROM review

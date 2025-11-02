@@ -41,6 +41,7 @@ public class InitListener implements ServletContextListener {
             TourServiceDao tourServiceDao = new TourServiceDaoImpl();
             ApplicationTourDao applicationTourDao = new ApplicationTourDaoImpl();
             FavoriteDao favoriteDao = new FavoriteDaoImpl();
+            ReviewDao reviewDao = new ReviewDaoImpl();
 
             UserService userService = new UserServiceImpl(userDao, operatorDao);
             OperatorService operatorService = new OperatorServiceImpl(userDao, operatorDao);
@@ -48,6 +49,7 @@ public class InitListener implements ServletContextListener {
             TourService tourService = new TourServiceImpl(tourDao, tourProgramDao, tourServiceDao, tourCategoryDao, imageUploadService, tourImageDao, operatorService);
             ApplicationTourService applicationTourService = new ApplicationTourServiceImpl(applicationTourDao, tourDao);
             FavoriteService favoriteService = new FavoriteServiceImpl(tourDao, favoriteDao);
+            ReviewService reviewService = new ReviewServiceImpl(reviewDao, userDao, tourDao, operatorDao);
 
             ObjectMapper objectMapper = new ObjectMapper();
 
@@ -58,6 +60,7 @@ public class InitListener implements ServletContextListener {
             sce.getServletContext().setAttribute("applicationTourService", applicationTourService);
             sce.getServletContext().setAttribute("objectMapper", objectMapper);
             sce.getServletContext().setAttribute("favoriteService", favoriteService);
+            sce.getServletContext().setAttribute("reviewService", reviewService);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

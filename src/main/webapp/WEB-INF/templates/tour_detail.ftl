@@ -109,6 +109,53 @@
                             </div>
                         </div>
 
+
+                        <div class="reviews-section">
+                            <h2 class="section-title">Комментарии</h2>
+
+                            <#if user??>
+                                <#if reviewErrors??>
+                                    <div class="alert-error">
+                                        <#list reviewErrors?values as error>
+                                            <p>${error}</p>
+                                        </#list>
+                                    </div>
+                                </#if>
+
+                                <form action="${contextPath}/reviews/add" method="POST" class="review-form">
+                                    <input type="hidden" name="tourId" value="${tourId}">
+<#--                                    maxlength="1023"-->
+                                    <textarea name="text" placeholder="Ваш комментарий..." required>${oldText!""}</textarea>
+                                    <button type="submit">Отправить</button>
+                                </form>
+                            <#else>
+                                <p class="login-hint"><a href="${contextPath}/login">Войдите</a>, чтобы оставить комментарий</p>
+                            </#if>
+
+                            <div id="reviews-list">
+                                <#if reviews?? && reviews?has_content>
+                                    <#list reviews as review>
+                                        <div class="review-item" id="review-${review.id()}">
+                                            <div class="review-top">
+                                                <strong>${review.userName()}</strong>
+                                                <#if review.isOwner()>
+                                                    <span class="badge-owner">Владелец</span>
+                                                </#if>
+                                                <span class="review-date">${review.createdDate()}</span>
+                                                <#if user?? && user.id() == review.userId()>
+                                                    <button class="btn-delete" data-review-id="${review.id()}">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </#if>
+                                            </div>
+                                            <p>${review.text()}</p>
+                                        </div>
+                                    </#list>
+                                <#else>
+                                    <p class="empty-text">Пока нет комментариев</p>
+                                </#if>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
