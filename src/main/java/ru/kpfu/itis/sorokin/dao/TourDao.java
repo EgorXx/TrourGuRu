@@ -23,4 +23,6 @@ public interface TourDao {
     void updateById(Connection connection, TourEntity tour, Integer id);
 
     void updateById(TourEntity tour, Integer id);
+
+    List<String> findAllDestination();
 }

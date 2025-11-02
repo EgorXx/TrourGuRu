@@ -48,6 +48,8 @@ public class TourDaoImpl implements TourDao {
             WHERE tour.id = ?
             """;
 
+    private static final String SQL_FIND_ALL_DESTINATIONS = "SELECT DISTINCT destination FROM tour ORDER BY ASC";
+
     @Override
     public TourEntity save(TourEntity tour, Connection connection) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_SAVE, Statement.RETURN_GENERATED_KEYS)) {
@@ -233,6 +235,25 @@ public class TourDaoImpl implements TourDao {
             updateById(connection, tour, id);
         } catch (SQLException e) {
             throw new DataAccessException("Failed update tour by id", e);
+        }
+    }
+
+    @Override
+    public List<String> findAllDestination() {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_DESTINATIONS)) {
+
+            List<String> destinations = new ArrayList<>();
+
+            while (resultSet.next()) {
+                destinations.add(resultSet.getString("destination"));
+            }
+
+            return destinations;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select destinations", e);
         }
     }
 }
