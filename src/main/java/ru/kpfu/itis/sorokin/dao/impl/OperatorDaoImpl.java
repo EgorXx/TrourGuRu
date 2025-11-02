@@ -1,21 +1,32 @@
 package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.OperatorDao;
+import ru.kpfu.itis.sorokin.dto.OperatorInfoDto;
 import ru.kpfu.itis.sorokin.entity.Operator;
 import ru.kpfu.itis.sorokin.entity.Status;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class OperatorDaoImpl implements OperatorDao {
     private static final String SQL_SAVE = "INSERT INTO operator (user_id, company_name, description, status) VALUES (?, ?, ?, ?::general_status)";
+
     private static final String SQL_FIND_BY_USER_ID = "SELECT user_id, company_name, description, status FROM operator WHERE user_id = ?";
+
     private static final String SQL_UPDATE_INFO = """
             UPDATE operator
             SET company_name = ?, description = ?
             WHERE user_id = ?
+            """;
+
+    private static final String SQL_FIND_ALL_PENDING = """
+            SELECT user_id, email, company_name, status
+            FROM operator INNER JOIN users ON operator.user_id = users.id
+            WHERE status = 'PENDING'
             """;
 
     @Override
@@ -103,6 +114,30 @@ public class OperatorDaoImpl implements OperatorDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed update profile operator", e);
+        }
+    }
+
+    @Override
+    public List<OperatorInfoDto> findAllPendingStatus() {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_PENDING)) {
+
+            List<OperatorInfoDto> operators = new ArrayList<>();
+
+            while (resultSet.next()) {
+                operators.add(new OperatorInfoDto(
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("email"),
+                        resultSet.getString("company_name"),
+                        Status.valueOf(resultSet.getString("status"))
+                        ));
+            }
+
+            return operators;
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select operators", e);
         }
     }
 }
