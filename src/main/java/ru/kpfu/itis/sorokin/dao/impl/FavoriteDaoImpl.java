@@ -1,6 +1,7 @@
 package ru.kpfu.itis.sorokin.dao.impl;
 
 import ru.kpfu.itis.sorokin.dao.FavoriteDao;
+import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 
@@ -19,6 +20,14 @@ public class FavoriteDaoImpl implements FavoriteDao {
     private static final String SQL_EXISTS = "SELECT EXISTS(SELECT 1 FROM favorite WHERE user_id = ? AND tour_id = ?)";
 
     private static final String SQL_FIND_ALL_BY_USER_ID = "SELECT tour_id FROM favorite WHERE user_id = ?";
+
+    private static final String SQL_FIND_ALL_TOURS_BY_USER_ID = """
+            SELECT tour.id, title, destination, duration, company_name, image_url
+            FROM tour INNER JOIN operator ON tour.operator_id = operator.user_id
+            INNER JOIN tour_image ON tour.id = tour_image.tour_id
+            INNER JOIN favorite ON tour.id = favorite.tour_id
+            WHERE tour_image.is_main = true AND favorite.user_id = ?
+            """;
 
     @Override
     public void addFavorite(Integer userId, Integer tourId) {
@@ -92,6 +101,35 @@ public class FavoriteDaoImpl implements FavoriteDao {
 
         } catch (SQLException e) {
             throw new DataAccessException("Failed select tour ids favorite by user id", e);
+        }
+    }
+
+    @Override
+    public List<CardTourDto> findAllByUserId(Integer userId) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_TOURS_BY_USER_ID)) {
+
+            preparedStatement.setInt(1, userId);
+
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<CardTourDto> tours = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    tours.add(new CardTourDto(
+                            resultSet.getInt("id"),
+                            resultSet.getString("title"),
+                            resultSet.getString("destination"),
+                            resultSet.getInt("duration"),
+                            resultSet.getString("company_name"),
+                            resultSet.getString("image_url")
+                    ));
+                }
+
+                return tours;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select favorite tours by user id", e);
         }
     }
 }
