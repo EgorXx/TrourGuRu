@@ -23,10 +23,16 @@ public class OperatorDaoImpl implements OperatorDao {
             WHERE user_id = ?
             """;
 
-    private static final String SQL_FIND_ALL_PENDING = """
+    private static final String SQL_FIND_ALL_BY_STATUS = """
             SELECT user_id, email, company_name, status
             FROM operator INNER JOIN users ON operator.user_id = users.id
-            WHERE status = 'PENDING'
+            WHERE status = ?::general_status
+            """;
+
+    private static final String SQL_UPDATE_STATUS_BY_USER_ID = """
+            UPDATE operator
+            SET status = ?::general_status
+            WHERE user_id = ?
             """;
 
     @Override
@@ -118,26 +124,48 @@ public class OperatorDaoImpl implements OperatorDao {
     }
 
     @Override
-    public List<OperatorInfoDto> findAllPendingStatus() {
+    public List<OperatorInfoDto> findAllByStatus(Status status) {
         try (Connection connection = DataBaseConnectionUtil.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(SQL_FIND_ALL_PENDING)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_FIND_ALL_BY_STATUS)) {
 
-            List<OperatorInfoDto> operators = new ArrayList<>();
+            preparedStatement.setString(1, status.name());
 
-            while (resultSet.next()) {
-                operators.add(new OperatorInfoDto(
-                        resultSet.getInt("user_id"),
-                        resultSet.getString("email"),
-                        resultSet.getString("company_name"),
-                        Status.valueOf(resultSet.getString("status"))
-                        ));
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<OperatorInfoDto> operators = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    operators.add(new OperatorInfoDto(
+                            resultSet.getInt("user_id"),
+                            resultSet.getString("email"),
+                            resultSet.getString("company_name"),
+                            status
+                    ));
+                }
+
+                return operators;
             }
 
-            return operators;
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select operators by status", e);
+        }
+    }
+
+    @Override
+    public void updateStatusByUserId(Integer userId, Status status) {
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_STATUS_BY_USER_ID)) {
+
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setInt(2, userId);
+
+            int updateRow = preparedStatement.executeUpdate();
+
+            if (updateRow == 0) {
+                throw new SQLException();
+            }
 
         } catch (SQLException e) {
-            throw new DataAccessException("Failed select operators", e);
+            throw new DataAccessException("Failed update operator status by user id", e);
         }
     }
 }
