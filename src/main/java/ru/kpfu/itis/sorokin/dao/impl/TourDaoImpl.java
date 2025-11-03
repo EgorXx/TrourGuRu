@@ -12,6 +12,7 @@ import ru.kpfu.itis.sorokin.util.DataBaseConnectionUtil;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class TourDaoImpl implements TourDao {
@@ -137,6 +138,73 @@ public class TourDaoImpl implements TourDao {
             }
         } catch (SQLException e) {
             throw new DataAccessException("Failed select tours", e);
+        }
+    }
+
+    @Override
+    public List<CardTourDto> findWithFilters(String search, String destination, Integer minDuration, Integer maxDuration, Integer limit, Integer offset) {
+        StringBuilder sql = new StringBuilder("""
+                SELECT tour.id, title, destination, duration, company_name, image_url
+                FROM tour INNER JOIN operator ON tour.operator_id = operator.user_id
+                INNER JOIN tour_image ON tour.id = tour_image.tour_id
+                WHERE tour_image.is_main = true
+                """);
+
+        List<Object> params = new ArrayList<>();
+
+        if (search != null && !search.isEmpty()) {
+            sql.append(" AND title ILIKE ?");
+            params.add("%" + search + "%");
+        }
+
+        if (destination != null && !destination.isEmpty()) {
+            sql.append(" AND destination = ?");
+            params.add(destination);
+        }
+
+        if (minDuration != null) {
+            sql.append(" AND duration >= ?");
+            params.add(minDuration);
+        }
+
+        if (maxDuration != null) {
+            sql.append(" AND duration <= ?");
+            params.add(maxDuration);
+        }
+
+        sql.append(" LIMIT ? OFFSET ?");
+        params.add(limit);
+        params.add(offset);
+
+        try (Connection connection = DataBaseConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                if (params.get(i) instanceof String) {
+                    preparedStatement.setString(i + 1, (String) params.get(i));
+                } else if (params.get(i) instanceof Integer) {
+                    preparedStatement.setInt(i + 1, (Integer) params.get(i));
+                }
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<CardTourDto> tours = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    tours.add(new CardTourDto(
+                            resultSet.getInt("id"),
+                            resultSet.getString("title"),
+                            resultSet.getString("destination"),
+                            resultSet.getInt("duration"),
+                            resultSet.getString("company_name"),
+                            resultSet.getString("image_url")
+                    ));
+                }
+
+                return tours;
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Failed select tours with filters", e);
         }
     }
 
