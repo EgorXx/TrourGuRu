@@ -37,11 +37,6 @@ public class CancelApplicationServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
 
-        if (session == null || session.getAttribute("user") == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
 
         try {

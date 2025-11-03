@@ -33,18 +33,7 @@ public class ProfileChangePassword extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-
-        if (session == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
-
-        if (userSessionDto == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
 
         String currentPassword = req.getParameter("currentPassword");
         String newPasswrod = req.getParameter("newPassword");

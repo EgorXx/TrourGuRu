@@ -48,6 +48,6 @@ public class RoleFilter extends HttpFilter {
 
     private boolean isOperatorPath(String path) {
         return path.startsWith("/operator/") || path.startsWith("/application/approve")
-                || path.startsWith("/application/reject");
+                || path.startsWith("/application/reject") || path.startsWith("/tour/delete");
     }
 }

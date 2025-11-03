@@ -30,12 +30,8 @@ public class AddReviewServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
 
-        if (session == null || session.getAttribute("user") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-
         UserSessionDto user = (UserSessionDto) session.getAttribute("user");
+
         String text = (String) req.getParameter("text");
         String tourIdStr = req.getParameter("tourId");
 

@@ -36,18 +36,9 @@ public class AddApplicationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         resp.setContentType("application/json");
 
         HttpSession session = req.getSession(false);
-
-        if (session == null || session.getAttribute("user") == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-            writeError(resp, "Необходима авторизация");
-
-            return;
-        }
 
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
 

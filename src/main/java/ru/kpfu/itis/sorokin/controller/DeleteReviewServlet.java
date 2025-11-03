@@ -36,15 +36,6 @@ public class DeleteReviewServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         HttpSession session = req.getSession(false);
-
-        if (session == null || session.getAttribute("user") == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-            writeError(resp, "Необходима авторизация");
-
-            return;
-        }
-
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
 
         try {

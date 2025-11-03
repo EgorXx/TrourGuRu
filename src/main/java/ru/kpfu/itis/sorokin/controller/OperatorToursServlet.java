@@ -2,6 +2,7 @@ package ru.kpfu.itis.sorokin.controller;
 
 import ru.kpfu.itis.sorokin.dto.CardTourDto;
 import ru.kpfu.itis.sorokin.dto.UserSessionDto;
+import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.service.TourService;
 
 import javax.servlet.ServletException;
@@ -26,21 +27,14 @@ public class OperatorToursServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-
-        if (session == null || session.getAttribute("user") == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-
         UserSessionDto user = (UserSessionDto) session.getAttribute("user");
 
-        if (!user.isOperator()) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
+        try {
+            List<CardTourDto> tourCards = tourService.getToursByOperatorId(user.id());
+            req.setAttribute("tourCards", tourCards);
+            req.getRequestDispatcher("my-tours.ftl").forward(req, resp);
+        } catch (ServiceException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
-        List<CardTourDto> tourCards = tourService.getToursByOperatorId(user.id());
-        req.setAttribute("tourCards", tourCards);
-        req.getRequestDispatcher("my-tours.ftl").forward(req, resp);
     }
 }

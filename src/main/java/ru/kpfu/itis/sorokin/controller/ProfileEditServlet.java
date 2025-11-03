@@ -33,18 +33,8 @@ public class ProfileEditServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-
-        if (session == null) {
-            resp.sendRedirect("/login");
-            return;
-        }
-
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
 
-        if (userSessionDto == null) {
-            resp.sendRedirect("/login");
-            return;
-        }
 
         Map<String, String> errors = (Map<String, String>) session.getAttribute("errors");
 

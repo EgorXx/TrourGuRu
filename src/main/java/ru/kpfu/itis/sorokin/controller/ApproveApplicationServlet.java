@@ -36,18 +36,7 @@ public class ApproveApplicationServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         HttpSession session = req.getSession(false);
-
-        if (session == null || session.getAttribute("user") == null) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
         UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
-
-        if (!userSessionDto.isOperator()) {
-            resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
 
         try {
             Map<String, Integer> request = objectMapper.readValue(

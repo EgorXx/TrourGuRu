@@ -30,18 +30,7 @@ public class UserApplicationsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
-
-        if (session == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-
         UserSessionDto user = (UserSessionDto) session.getAttribute("user");
-
-        if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
 
         try {
             List<UserApplicationTourDto> userApplications = applicationTourService.getActiveApplicationByUserId(user.id());
