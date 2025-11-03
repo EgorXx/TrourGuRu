@@ -21,9 +21,22 @@ public class RoleFilter extends HttpFilter {
         HttpServletResponse resp = (HttpServletResponse) response;
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
-        UserSessionDto user = (UserSessionDto) req.getSession().getAttribute("user");
+        HttpSession session = req.getSession(false);
+
+        if (session == null) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        UserSessionDto user = (UserSessionDto) session.getAttribute("user");
+
+        if (user == null) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         if (path.startsWith("/admin/") && !user.isAdmin()) {
+            System.out.println("RoleFilter: Blocking access to " + path + " for role " + user.role());
             resp.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }

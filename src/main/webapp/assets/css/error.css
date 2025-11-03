@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.background-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background:
+            linear-gradient(90deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            linear-gradient(270deg, rgba(81, 236, 124, 0.20) 0%, rgba(40, 167, 69, 0.05) 45%),
+            url('../image/background_main_page.jpg') no-repeat center center;
+    background-size: cover;
+    filter: blur(2px);
+}
+
+.error-box {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    max-width: 400px;
+}
+
+h1 {
+    font-size: 4rem;
+    color: #29a143;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+a {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #29a143;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+a:hover {
+    opacity: 0.8;
+}
