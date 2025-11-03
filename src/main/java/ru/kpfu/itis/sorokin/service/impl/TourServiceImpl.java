@@ -216,6 +216,25 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
+    public List<CardTourDto> getTours(SearchToursDto searchToursDto, int page, int pageSize) {
+        Integer limit = pageSize;
+        Integer offset = (page - 1) * pageSize;
+
+        try {
+            return tourDao.findWithFilters(
+                    searchToursDto.search(),
+                    searchToursDto.destination(),
+                    searchToursDto.minDuration(),
+                    searchToursDto.maxDuration(),
+                    limit,
+                    offset
+            );
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed get tours with filters", e);
+        }
+    }
+
+    @Override
     public List<CardTourDto> getToursByOperatorId(Integer operatorId) {
         return tourDao.findAllByOperatorId(operatorId);
     }
