@@ -31,6 +31,7 @@
                     <span id="email-error" class="error-message">Ошибка: ${errors.email}</span>
                 </#if>
                 <input type="email" id="email" class="form-control" name="email" placeholder="Электронная почта" required value="${(email)!''}">
+                <span id="email-status" class="check-message"></span>
             </div>
 
             <div id="user-name-field" class="mb-3">
@@ -53,7 +54,7 @@
                 </#if>
                 <input type="password" id="password" class="form-control" name="password" placeholder="Пароль" required minlength="8">
             </div>
-            <button type="submit" class="btn btn-submit w-100">Зарегистрироваться</button>
+            <button id="submit-button" type="submit" class="btn btn-submit w-100">Зарегистрироваться</button>
         </form>
 
         <div class="login-link">
@@ -64,4 +65,8 @@
 
 <#macro scripts>
     <script src="${contextPath}/assets/js/sign_up.js"></script>
+        <script>
+        const contextPath = '${contextPath}';
+    </script>
+    <script src="${contextPath}/assets/js/user_exist.js"></script>
 </#macro>

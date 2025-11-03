@@ -104,4 +104,19 @@ body {
     margin-top: -10px;
     margin-bottom: 10px;
     display: block;
+    text-align: left;
+}
+
+.check-message {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.check-message.error {
+    color: #dc3545;
+}
+
+.check-message.success {
+    color: #28a745;
 }

@@ -9,6 +9,7 @@ import ru.kpfu.itis.sorokin.entity.Role;
 import ru.kpfu.itis.sorokin.entity.Status;
 import ru.kpfu.itis.sorokin.entity.User;
 import ru.kpfu.itis.sorokin.exception.AuthException;
+import ru.kpfu.itis.sorokin.exception.DataAccessException;
 import ru.kpfu.itis.sorokin.exception.ServiceException;
 import ru.kpfu.itis.sorokin.exception.ValidationException;
 import ru.kpfu.itis.sorokin.service.UserService;
@@ -113,6 +114,15 @@ public class UserServiceImpl implements UserService {
         validateUpdateProfile(id, userName, email);
 
         userDao.updateProfile(id, userName, email);
+    }
+
+    @Override
+    public boolean existByEmail(String email) {
+        try {
+            return userDao.findByEmail(email).isPresent();
+        } catch (DataAccessException e) {
+            throw new ServiceException("Failed find by email", e);
+        }
     }
 
     private void validateSignUpUser(UserSignUpDto userSignUpDto) throws ValidationException {

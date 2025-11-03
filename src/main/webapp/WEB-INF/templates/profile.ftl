@@ -29,20 +29,10 @@
                 Редактировать профиль
             </a>
 
-            <a href="#" class="btn btn-profile-action">
-                <span class="icon-circle"><i class="bi bi-chat"></i></span>
-                Мои сообщения
-            </a>
-
             <#if user.isUser()>
                 <a href="${contextPath}/user/applications" class="btn btn-profile-action">
                     <span class="icon-circle"><i class="bi bi-calendar-check-fill"></i></span>
                     Мои заявки
-                </a>
-
-                <a href="#" class="btn btn-profile-action">
-                    <span class="icon-circle"><i class="bi bi-megaphone"></i></span>
-                    Мои отзывы
                 </a>
 
                 <a href="${contextPath}/user/my-favorite" class="btn btn-profile-action">

@@ -14,4 +14,6 @@ public interface UserService {
     void changePassword(Integer userId, String currentPassword, String newPassword) throws ValidationException;
 
     void updateProfile(Integer id, String userName, String email) throws ValidationException;
+
+    boolean existByEmail(String email);
 }
