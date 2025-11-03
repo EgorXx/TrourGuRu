@@ -37,6 +37,12 @@ public class AdminFilter  extends HttpFilter {
 
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
+        if (path.contains("/assets/") || path.endsWith(".css") || path.endsWith(".js") ||
+                path.endsWith(".jpg") || path.endsWith(".png") || path.endsWith(".ico")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         if (path.equals("/admin/operators") ||
                 path.equals("/admin/operators/approve") ||
                 path.equals("/admin/operators/reject") ||

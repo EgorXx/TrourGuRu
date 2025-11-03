@@ -21,6 +21,12 @@ public class RoleFilter extends HttpFilter {
         HttpServletResponse resp = (HttpServletResponse) response;
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
+        if (path.contains("/assets/") || path.endsWith(".css") || path.endsWith(".js") ||
+                path.endsWith(".jpg") || path.endsWith(".png") || path.endsWith(".ico")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         HttpSession session = req.getSession(false);
 
         if (session == null) {
