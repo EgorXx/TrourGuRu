@@ -1,9 +1,6 @@
 package ru.kpfu.itis.sorokin.controller;
 
-import ru.kpfu.itis.sorokin.dto.CardTourDto;
-import ru.kpfu.itis.sorokin.dto.ReviewDto;
-import ru.kpfu.itis.sorokin.dto.TourDetailDto;
-import ru.kpfu.itis.sorokin.dto.UserSessionDto;
+import ru.kpfu.itis.sorokin.dto.*;
 import ru.kpfu.itis.sorokin.service.FavoriteService;
 import ru.kpfu.itis.sorokin.service.ReviewService;
 import ru.kpfu.itis.sorokin.service.TourService;
@@ -48,10 +45,22 @@ public class TourServlet extends HttpServlet {
     }
 
     private void showTourList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<CardTourDto> tourCards = tourService.getTours(1, 6);
+        String search = req.getParameter("search");
+        String destination = req.getParameter("destination");
+        Integer minDuration = parseInteger(req.getParameter("minDuration"));
+        Integer maxDuration = parseInteger(req.getParameter("maxDuration"));
+
+        SearchToursDto searchToursDto = new SearchToursDto(search, destination, minDuration, maxDuration);
+
+        List<CardTourDto> tourCards = tourService.getTours(searchToursDto, 1, 6);
         Boolean hasMore = tourCards.size() == 6;
 
         List<String> destinations = tourService.getAllTourDestinations();
+
+        req.setAttribute("search", search);
+        req.setAttribute("destination", destination);
+        req.setAttribute("minDuration", minDuration);
+        req.setAttribute("maxDuration", maxDuration);
 
         req.setAttribute("tourCards", tourCards);
         req.setAttribute("hasMore", hasMore);
@@ -108,6 +117,7 @@ public class TourServlet extends HttpServlet {
         }
 
     }
+
     private void loadUserFavorites(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
 
@@ -115,6 +125,17 @@ public class TourServlet extends HttpServlet {
             UserSessionDto userSessionDto = (UserSessionDto) session.getAttribute("user");
             List<Integer> favoriteTourIds = favoriteService.getAllFavoritesByUserId(userSessionDto.id());
             req.setAttribute("favoriteTourIds", favoriteTourIds);
+        }
+    }
+
+    private Integer parseInteger(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
