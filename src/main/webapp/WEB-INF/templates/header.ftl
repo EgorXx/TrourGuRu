@@ -5,7 +5,7 @@
         </a>
 
         <div class="d-flex align-items-center gap-2">
-            <#if user?? && (user.isUser() || user.isOperator())>
+            <#if user?? && (user.isUser() || user.isOperator() || user.isAdmin())>
                 <a class="btn btn-nav-outline" href="${contextPath}/profile">Личный кабинет</a>
                 <a class="btn btn-nav-primary" href="${contextPath}/logout">Выйти</a>
                 <#else>
